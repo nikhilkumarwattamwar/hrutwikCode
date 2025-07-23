@@ -15,7 +15,7 @@ public class ManualOpration {
     }
 
     static  void addingAndDisplay(){
-        List<String> names=new LinkedList<>();
+        LinkedList<String> names=new LinkedList<>();
         names.add("alice");
         names.add("bob");
         names.add("charlie");
@@ -30,12 +30,20 @@ public class ManualOpration {
         for (int i=0;i<names.size();i++){
             System.out.print("  "+names.get(i));
         }
+        System.out.println();
         for (int i=names.size()-1;i>0;i--){
             if (i%2==0){
+//                System.out.println("Index :"+i+" value :"+names.get(i));
                 names.remove(i);
             }
+            System.out.println("Index :"+i+" value :"+names.get(i));
         }
-        boolean flag=true;
+        System.out.println();
+//        for (int i=names.size()-1;i>0;i--){
+//            System.out.println("Index :"+i+" value :"+names.get(i));
+//
+//        }
+        System.out.println();
         for (int i=0;i<names.size();i++){
             String name=names.get(i);
             String capitalized = Character.toUpperCase(name.charAt(0)) + name.substring(1).toLowerCase();
