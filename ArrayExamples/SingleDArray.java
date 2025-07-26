@@ -15,6 +15,7 @@ public class SingleDArray {
         }
         System.out.println("Sum of all Elements "+sum);
         System.out.println("============================================================================================");
+        System.out.println("============================================================================================");
 
         int max=0;
         int min=arr[3];
@@ -27,7 +28,7 @@ public class SingleDArray {
             }
         }
         System.out.println("Maximum Element :"+max+" Minimum Element "+min);
-
+        System.out.println("============================================================================================");
         System.out.println("============================================================================================");
 
         int[] rev=new int[arr.length];
@@ -41,15 +42,6 @@ public class SingleDArray {
         }
         System.out.println();
         System.out.println("============================================================================================");
-
-
-
-
-
-
-
-
-
 
         for (int i=0;i<arr.length;i++){
             System.out.print(arr[i]+" ");

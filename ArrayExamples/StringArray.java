@@ -13,8 +13,11 @@ public class StringArray {
                     }
                 }
             }
+        System.out.println("============================================================================================");
         System.out.println(specificName(str,"pqr"));
+        System.out.println("============================================================================================");
         System.out.println(rev);
+        System.out.println("============================================================================================");
         String[] sort=sortArray(str);
         for(int i=0;i<sort.length;i++){
             System.out.println(sort[i]);
