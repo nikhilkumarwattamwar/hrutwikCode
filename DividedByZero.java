@@ -1,4 +1,4 @@
-package CustomException;
+package GitFolder.hrutwikCode;
 
 public class DividedByZero {
     static int num=1422;

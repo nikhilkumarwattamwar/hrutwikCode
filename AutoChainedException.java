@@ -1,4 +1,4 @@
-package CustomException;
+package GitFolder.hrutwikCode;
 
 public class AutoChainedException {
     public static void main(String[] args) {

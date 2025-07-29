@@ -1,4 +1,4 @@
-package CustomException;
+package GitFolder.hrutwikCode;
 
 public class MObileNumberValidation {
     public static void NumberValidator(String num) throws InvalidMobileNumber{

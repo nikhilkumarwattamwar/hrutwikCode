@@ -1,4 +1,4 @@
-package CustomException;
+package GitFolder.hrutwikCode;
 
 public class MultipleResources {
     public static void main(String[] args) {
