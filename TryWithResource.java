@@ -1,4 +1,4 @@
-package CustomException;
+package GitFolder.hrutwikCode;
 
 public class TryWithResource {
     public static void main(String[] args) {

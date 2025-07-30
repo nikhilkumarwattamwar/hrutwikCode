@@ -1,6 +1,6 @@
 package CustomException;
 
-public class ArrayAccess {
+public class ArrayAccess1 {
     static void getAccess(int[] arr,int index) throws ArrauyOutOfBound{
         if(index<0) throw new InvalidIndexException();
         if (arr.length<index) throw new ArrauyOutOfBound("Array out Bound Exception");
