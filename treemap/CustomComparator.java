@@ -1,7 +1,6 @@
-package Collection.TreeMap;
+package GitFolder.hrutwikCode.treemap;
 
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.TreeMap;
 

@@ -1,4 +1,4 @@
-package Collection.TreeMap;
+package GitFolder.hrutwikCode.treemap;
 
 import java.util.*;
 

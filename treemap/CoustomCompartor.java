@@ -1,8 +1,7 @@
-package Collection.TreeMap;
+package GitFolder.hrutwikCode.treemap;
 
 import java.util.Comparator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
 public class CoustomCompartor {

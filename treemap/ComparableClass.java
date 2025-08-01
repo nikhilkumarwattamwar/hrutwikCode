@@ -1,4 +1,4 @@
-package Collection.TreeMap;
+package GitFolder.hrutwikCode.treemap;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,7 +26,7 @@ class  Person implements Comparable<Person>{
 
     @Override
     public int compareTo(Person o) {
-        return Integer.compare(this.id,o.id);
+        return o.name.compareTo(o.name);
     }
 
     @Override
