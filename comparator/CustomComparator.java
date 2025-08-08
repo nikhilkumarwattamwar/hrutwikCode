@@ -12,27 +12,37 @@ public class CustomComparator {
         people.add(new Person("Sonal", 55000));
         people.add(  new Person("Xavi", 30000));
         people.add( new Person("AAAAAAAAAAAAAA", 60000));
-        Comparator<Person> comparator=new Comparator<Person>() {
-            @Override
-            public int compare(Person o1, Person o2) {
-                return o1.name.length() - o2.name.length();
-            }
-        };
+//        Comparator<Person> comparator=new Comparator<Person>() {
+//            @Override
+//            public int compare(Person o1, Person o2) {
+//                return (o1.name.compareTo(o2.name));
+//            }
+//        };
 
-        Collections.sort(people,comparator);
+       people.sort(Comparator.comparing(p->p.name));
         System.out.println(people);
-
-
-
-
-
-
-
     }
 }
 
 class Person{
     String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getSal() {
+        return sal;
+    }
+
+    public void setSal(int sal) {
+        this.sal = sal;
+    }
+
     int sal;
 
     public Person(String name, int sal) {
@@ -75,6 +85,6 @@ class Employee implements Comparable<Employee>{
 
     @Override
     public int compareTo(Employee o) {
-        return Integer.compare(o.id,this.id);
+        return o.name.length()-this.name.length();
     }
 }
