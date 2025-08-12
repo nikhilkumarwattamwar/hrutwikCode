@@ -1,7 +1,12 @@
 package GitFolder.hrutwikCode.JAVA_8;
 
+<<<<<<< Updated upstream
 import GitFolder.hrutwikCode.Chained2;
 
+=======
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+>>>>>>> Stashed changes
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -103,6 +108,41 @@ public class PracticeExamples {
         double avg=Arrays.stream(a).average().getAsDouble();
         System.out.println("Average of all elements? :"+avg);
 
+<<<<<<< Updated upstream
+=======
+//        How do you find sum of first 10 natural numbers?
+        long sumFirst10NaturalNumbers=IntStream.range(1,11).sum();
+        System.out.println("find sum of first 10 natural numbers : "+sumFirst10NaturalNumbers);
+
+
+//        How do you get last element of an array?
+        int name=list2.stream().skip(list2.size()-1).findFirst().get();
+        System.out.println(name);
+
+//        Find the age of a person in years if the birthday has given?
+        LocalDate localDate=LocalDate.of(2000,8,1);
+        LocalDate now=LocalDate.now();
+        System.out.println(ChronoUnit.YEARS.between(localDate,now));
+
+
+
+
+
+
+
+
+
+        // how many time e mentioned
+//        String s="hrutwik says like like eeee ee ";
+//       long c =Stream.of(s.split(" " )).filter(i->i.equals("e")).count();
+//        System.out.println(count);
+//        String rev =Stream.of(s.split("")).reduce("",(d,c)->c+d);
+//        System.out.println(rev);
+//        //
+//        long count1=s.chars().filter(i->i=='').count();
+//        System.out.println(count1);
+
+>>>>>>> Stashed changes
     }
 
 
