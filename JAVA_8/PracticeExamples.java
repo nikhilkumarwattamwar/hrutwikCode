@@ -1,12 +1,7 @@
 package GitFolder.hrutwikCode.JAVA_8;
 
-<<<<<<< Updated upstream
-import GitFolder.hrutwikCode.Chained2;
-
-=======
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
->>>>>>> Stashed changes
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -108,8 +103,6 @@ public class PracticeExamples {
         double avg=Arrays.stream(a).average().getAsDouble();
         System.out.println("Average of all elements? :"+avg);
 
-<<<<<<< Updated upstream
-=======
 //        How do you find sum of first 10 natural numbers?
         long sumFirst10NaturalNumbers=IntStream.range(1,11).sum();
         System.out.println("find sum of first 10 natural numbers : "+sumFirst10NaturalNumbers);
@@ -124,6 +117,7 @@ public class PracticeExamples {
         LocalDate now=LocalDate.now();
         System.out.println(ChronoUnit.YEARS.between(localDate,now));
 
+//        Who has the most working experience in the organization?
 
 
 
@@ -142,7 +136,6 @@ public class PracticeExamples {
 //        long count1=s.chars().filter(i->i=='').count();
 //        System.out.println(count1);
 
->>>>>>> Stashed changes
     }
 
 

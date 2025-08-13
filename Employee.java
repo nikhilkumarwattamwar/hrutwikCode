@@ -1,8 +1,11 @@
 package GitFolder.hrutwikCode;
 
+import jdk.jfr.Frequency;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Employee {
     int id;
@@ -158,7 +161,104 @@ public class Employee {
         System.out.println("Older than 25: " + NameONly25.get(true));
         System.out.println("Younger or equal to 25: " + NameONly25.get(false));
 
+//        Who has the most working experience in the organization?
+        Employee mostExp= employeeList.stream().sorted(Comparator.comparing(Employee::getYearOfJoining)).findFirst().get();
+        //Optimize way
+//        Employee mostExp=employeeList.stream().min(Comparator.comparing(Employee::getYearOfJoining)).orElse(null);
+        System.out.println("Who has the most working experience in the organization : "+mostExp);
+
+//        How many male and female employees are there in the sales and marketing team?
+        Map<String,Long> maleAndFemaleEmployeesSales=employeeList.stream().filter(i->i.department.equals("Sales And Marketing")).collect(Collectors.groupingBy(Employee::getGender,Collectors.counting()));
+        System.out.println("male and female employees are there in the sales and marketing team : "+maleAndFemaleEmployeesSales);
+
+
+//        What is the average salary of male and female employees?
+        Map<String,Double> avgSalMalNFemale=employeeList.stream().collect(Collectors.groupingBy(Employee::getGender,Collectors.averagingDouble(Employee::getSalary)));
+        System.out.println("What is the average salary of male and female employees? : "+avgSalMalNFemale);
+
+//        List down the names of all employees in each department?
+        Map<String,List<String>> namesOfEmpEachDept=employeeList.stream().collect(Collectors.groupingBy(Employee::getDepartment,Collectors.mapping(Employee::getName,Collectors.toList())));
+        System.out.println("names of all employees in each department : "+namesOfEmpEachDept);
+        for (Map.Entry<String,List<String>> names:namesOfEmpEachDept.entrySet()){
+            System.out.println("---------------------------------------");
+            System.out.println("Dept Name : "+names.getKey());
+            System.out.println("---------------------------------------");
+            for (String name: names.getValue()){
+                System.out.println("Names : "+name);
+            }
+        }
+
+
+//        Given a list of integers, find all elements that appear more than once, preserving the order of their first occurrence.
+        List<Integer> numbers=Arrays.asList(1, 3, 5, 3, 7, 1, 9, 3);
+
+        Set<Integer> added=new HashSet<>();
+
+//        List<Integer> res=numbers.stream().filter(n->Collections.frequency(numbers,n)>1).filter(added::add).collect(Collectors.toList());
+        Set<Integer> res=numbers.stream().filter(n->!added.add(n)).collect(Collectors.toSet());
+        System.out.println(res);
+
+//        Given a paragraph string, find the top 3 most frequent words ignoring case and punctuation.
+        String str="Java is great . Java is powerful . Streams are powerful in Java .";
+//        Map<String,Long> feqEmelemnt=Stream.of(str.split(" ")).collect(Collectors.groupingBy(String::toLowerCase,Collectors.counting()));
+        Map<String,Long> feqEmelemnt=Arrays.stream(
+                        str.toLowerCase()               // ignore case
+                                .replaceAll("[^a-z\\s]", "")  // remove punctuation
+                                .split("\\s+"))               // split by whitespace
+                .collect(Collectors.groupingBy(word -> word, Collectors.counting()));
+        System.out.println(feqEmelemnt);
+        feqEmelemnt.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).limit(3).forEach(s-> System.out.println(s.getKey()));
+
+        List<String> list=Arrays.asList("Java", "", "Streams", null, "API");
+        String concat =list.stream().filter(Objects::nonNull).filter(s->!s.isEmpty()).collect(Collectors.joining("-"));
+        System.out.println(concat);
+
+
+//        Character Frequency Counter
+        String para="Java Streams API";
+        Map<Character,Long> charCount=para.chars().mapToObj(c->(char)c).map(Character::toLowerCase).filter(Character::isLetter).collect(Collectors.groupingBy(Function.identity(),Collectors.counting() ));
+        System.out.println(charCount);
+
+//        Longest Word in a Sentence
+        String sentence = "Java Stream API makes life easiers";
+         String longesrWord=Stream.of(sentence.split(" ")).max(Comparator.comparing(String::length)).get();
+        System.out.println(longesrWord);
+
+//        Anagram Checker
+        String s1 = "Listen";
+        String s2 = "Silent";
+        String res1=Stream.of(s1.split("")).map(String::toUpperCase).sorted(Comparator.reverseOrder()).collect(Collectors.joining());
+        String res2=Stream.of(s2.split("")).map(String::toUpperCase).sorted(Comparator.reverseOrder()).collect(Collectors.joining());
+        System.out.println(res2.equals(res1));
+
+//        Palindrome Words in a Sentence
+        String palindromeSentence = "Madam teaches civic duties";
+       String  rev= Stream.of(palindromeSentence.split(" ")).map(m->new StringBuilder(m).reverse()).collect(Collectors.joining(" "));
+       Set<String> palindromeWords=Stream.of(palindromeSentence.split(" ")).map(String::toUpperCase).filter(w->w.equals(new StringBuilder(w).reverse().toString())).collect(Collectors.toSet());
+        System.out.println(rev);
+        System.out.println(palindromeWords);
+
+//        Most Frequent Word
+
+        String text = "Java is great and Java is fun";
+        Map.Entry<String, Long> mostFeq=Stream.of(text.split(" ")).map(String::toUpperCase).collect(Collectors.groupingBy(Function.identity(),Collectors.counting()))
+                .entrySet().stream().max(Map.Entry.comparingByValue()).get();
+
+        String lenght=Stream.of(text.split(" ")).max(Comparator.comparing(String::length)).get();
+
+        System.out.println(mostFeq);
+        System.out.println(lenght);
+
+        // Reverse Each Word
+       List<String> revEachWord= Arrays.stream(text.split(" ")).map(x->new StringBuilder(x).reverse().toString()).collect(Collectors.toList());
+        System.out.println(revEachWord);
+
+
+
+
+
     }
+
 
 
 }
