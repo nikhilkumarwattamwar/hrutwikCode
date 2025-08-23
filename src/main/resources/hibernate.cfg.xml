@@ -1,0 +1,26 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- JDBC -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/test</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">hrutwik2026</property>
+
+        <!-- Dialect (Hibernate 6 can auto-detect, but explicit is fine) -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!-- Schema generation & logging -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Mapped classes -->
+        <mapping class="org.example.Student"/>
+        <mapping class="org.example.StudentDetail"/>
+        <mapping class="org.example.Department"/>
+        <mapping class="org.example.Employee"/>
+    </session-factory>
+</hibernate-configuration>
