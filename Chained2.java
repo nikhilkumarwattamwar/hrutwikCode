@@ -14,7 +14,7 @@ public class Chained2 {
             for (Throwable t:e.getSuppressed()){
                 System.out.println(t.getMessage());
             }
-            System.out.println(e.getCause());
+//            System.out.println(e.getCause());
         }
     }
 }
@@ -35,5 +35,25 @@ class Resource12 implements AutoCloseable{
     @Override
     public void close() throws Exception {
         System.out.println("hello from Resource12");
+    }
+}
+
+class MyResource1 implements AutoCloseable {
+    @Override
+    public void close() throws Exception {
+        throw new Exception("Exception from close()");
+    }
+}
+
+ class SuppressedExample {
+    public static void main(String[] args) {
+        try (MyResource1 r = new MyResource1()) {
+            throw new Exception("Exception from try block");
+        } catch (Exception e) {
+            System.out.println("Caught: " + e);
+            for (Throwable t : e.getSuppressed()) {
+                System.out.println("Suppressed: " + t);
+            }
+        }
     }
 }
