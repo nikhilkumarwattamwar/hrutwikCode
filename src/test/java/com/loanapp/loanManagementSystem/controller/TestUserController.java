@@ -7,9 +7,11 @@ import com.loanapp.loanManagementSystem.contollers.UserController;
 import com.loanapp.loanManagementSystem.dto.UserDto;
 import com.loanapp.loanManagementSystem.service.UserService;
 
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 import static org.mockito.Mockito.*;
 
-
+@ExtendWith(MockitoExtension.class)
 public class TestUserController {
 
     @Mock
@@ -33,7 +35,6 @@ public class TestUserController {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         sampleUser = new UserDto();
         sampleUser.setId(UUID.randomUUID());
         sampleUser.setEmail("test@example.com");

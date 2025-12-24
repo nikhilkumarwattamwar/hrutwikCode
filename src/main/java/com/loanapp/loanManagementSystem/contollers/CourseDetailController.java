@@ -20,7 +20,7 @@ public class CourseDetailController {
     CourseService service;
 
     @PostMapping("/{userId}")
-    CourseDto addCourseDetails(@RequestBody @Valid CourseDto dto, @PathVariable UUID userId){
+    public CourseDto addCourseDetails(@RequestBody @Valid CourseDto dto, @PathVariable UUID userId){
 
         log.info("Adding course details for userId: {}", userId);
 
@@ -32,7 +32,7 @@ public class CourseDetailController {
 
 
     @GetMapping("/{userId}")
-    CourseDto getCourseDetailById(@PathVariable UUID userId){
+   public CourseDto getCourseDetailById(@PathVariable UUID userId){
 
         log.info("Fetching course details for userId: {}", userId);
 
@@ -43,7 +43,7 @@ public class CourseDetailController {
     }
 
     @PutMapping("/{userId}")
-    CourseDto updateCourseDetail(@RequestBody @Valid CourseDto dto, @PathVariable UUID userId){
+   public CourseDto updateCourseDetail(@RequestBody @Valid CourseDto dto, @PathVariable UUID userId){
         log.info("Updating course details for userId: {}", userId);
 
         CourseDto updatedDto = service.updateCourseDetails(userId, dto);

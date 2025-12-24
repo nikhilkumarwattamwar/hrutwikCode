@@ -20,7 +20,7 @@ public class EducationDetailController {
     EducationService service;
 
     @PostMapping("/{userId}")
-    List<EducationDto> addEducationDetails(@RequestBody @Valid List<EducationDto> dto, @PathVariable UUID userId){
+    public List<EducationDto> addEducationDetails(@RequestBody @Valid List<EducationDto> dto, @PathVariable UUID userId){
 
 
         log.info("Adding education details for userId: {}", userId);
@@ -32,7 +32,7 @@ public class EducationDetailController {
     }
 
     @GetMapping("/{userId}")
-    List<EducationDto> getEducationDetailById(@PathVariable UUID userId){
+    public List<EducationDto> getEducationDetailById(@PathVariable UUID userId){
         log.info("Fetching education details for userId: {}", userId);
 
         List<EducationDto> educationList = service.getEducationDetailById(userId);
@@ -44,7 +44,7 @@ public class EducationDetailController {
     }
 
     @PutMapping("/{userId}")
-    List<EducationDto> updateEducationDetails(@RequestBody @Valid List<EducationDto> dto, @PathVariable UUID userId){
+    public List<EducationDto> updateEducationDetails(@RequestBody @Valid List<EducationDto> dto, @PathVariable UUID userId){
         log.info("Updating education details for userId: {}", userId);
 
         List<EducationDto> updatedList = service.updateEducationDetail(dto, userId);

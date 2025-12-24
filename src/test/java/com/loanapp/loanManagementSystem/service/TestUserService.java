@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 import com.loanapp.loanManagementSystem.dto.AddressDto;
 import com.loanapp.loanManagementSystem.entities.*;
 import com.loanapp.loanManagementSystem.enums.AddressType;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import com.loanapp.loanManagementSystem.dto.UserDto;
 import com.loanapp.loanManagementSystem.mapper.AddressMapper;
@@ -32,6 +33,7 @@ public class TestUserService {
     UserServiceImpl userService;
 
     @Test
+    @DisplayName("Adding user details")
     void testCreateUser(){
         UserDto dto= new UserDto();
         dto.setEmail("abcd@gmail.com");
@@ -61,6 +63,7 @@ public class TestUserService {
     }
 
     @Test
+    @DisplayName("Fetching all users details")
     void testGetAllUsers() {
         List<User> users = List.of(new User(), new User());
         List<UserDto> dtoList = List.of(new UserDto(), new UserDto());
@@ -75,6 +78,7 @@ public class TestUserService {
     }
 
     @Test
+    @DisplayName("Fetching user details using user id")
     void testGetUserById(){
         UUID id=UUID.randomUUID();
         User user= new User();
@@ -89,6 +93,7 @@ public class TestUserService {
     }
 
     @Test
+    @DisplayName("Updating user details")
     void testUpdateUser(){
         UUID id=UUID.randomUUID();
         UserDto dto= new UserDto();
@@ -110,6 +115,7 @@ public class TestUserService {
 
 
     @Test
+    @DisplayName("Deleting user details")
     void testSoftDeletingUser(){
         UUID id=UUID.randomUUID();
 
