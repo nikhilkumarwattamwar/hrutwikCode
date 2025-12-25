@@ -1,6 +1,6 @@
 package com.loanapp.loanManagementSystem.repository;
 
-import com.loanapp.loanManagementSystem.entities.CourseDetails;
+import com.loanapp.loanManagementSystem.entities.user.CourseDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

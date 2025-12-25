@@ -3,14 +3,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
-import com.loanapp.loanManagementSystem.contollers.UserController;
-import com.loanapp.loanManagementSystem.dto.UserDto;
-import com.loanapp.loanManagementSystem.service.UserService;
+import com.loanapp.loanManagementSystem.contollers.user.UserController;
+import com.loanapp.loanManagementSystem.dto.user.UserDto;
+import com.loanapp.loanManagementSystem.service.user.UserService;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import java.util.Arrays;

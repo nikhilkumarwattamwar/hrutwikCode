@@ -1,9 +1,9 @@
 package com.loanapp.loanManagementSystem.controller;
 
-import com.loanapp.loanManagementSystem.contollers.CourseDetailController;
-import com.loanapp.loanManagementSystem.dto.CourseDto;
+import com.loanapp.loanManagementSystem.contollers.user.CourseDetailController;
+import com.loanapp.loanManagementSystem.dto.user.CourseDto;
 import com.loanapp.loanManagementSystem.repository.CourseRepository;
-import com.loanapp.loanManagementSystem.service.CourseService;
+import com.loanapp.loanManagementSystem.service.user.CourseService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.UUID;

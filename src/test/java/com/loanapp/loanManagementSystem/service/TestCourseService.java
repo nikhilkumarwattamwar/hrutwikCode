@@ -1,11 +1,12 @@
 package com.loanapp.loanManagementSystem.service;
 
-import com.loanapp.loanManagementSystem.dto.CourseDto;
-import com.loanapp.loanManagementSystem.entities.CourseDetails;
-import com.loanapp.loanManagementSystem.entities.User;
-import com.loanapp.loanManagementSystem.mapper.CourseMapper;
+import com.loanapp.loanManagementSystem.dto.user.CourseDto;
+import com.loanapp.loanManagementSystem.entities.user.CourseDetails;
+import com.loanapp.loanManagementSystem.entities.user.User;
+import com.loanapp.loanManagementSystem.mapper.user.CourseMapper;
 import com.loanapp.loanManagementSystem.repository.CourseRepository;
 import com.loanapp.loanManagementSystem.repository.UserRepository;
+import com.loanapp.loanManagementSystem.service.user.CourseServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,6 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @ExtendWith(MockitoExtension.class)
 public class TestCourseService {

@@ -1,6 +1,6 @@
 package com.loanapp.loanManagementSystem.repository;
 
-import com.loanapp.loanManagementSystem.entities.EducationDetails;
+import com.loanapp.loanManagementSystem.entities.user.EducationDetails;
 import com.loanapp.loanManagementSystem.enums.ExamPassed;
 import org.springframework.data.jpa.repository.JpaRepository;
 

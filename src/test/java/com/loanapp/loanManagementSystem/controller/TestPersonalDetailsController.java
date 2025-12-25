@@ -1,10 +1,8 @@
 package com.loanapp.loanManagementSystem.controller;
 
-import com.loanapp.loanManagementSystem.contollers.PersonalDetailController;
-import com.loanapp.loanManagementSystem.dto.PersonalDto;
-import com.loanapp.loanManagementSystem.entities.PersonalDetails;
-import com.loanapp.loanManagementSystem.service.PersonalDetailsService;
-import org.junit.jupiter.api.BeforeEach;
+import com.loanapp.loanManagementSystem.contollers.user.PersonalDetailController;
+import com.loanapp.loanManagementSystem.dto.user.PersonalDto;
+import com.loanapp.loanManagementSystem.service.user.PersonalDetailsService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
