@@ -8,6 +8,7 @@ import com.loanapp.loanManagementSystem.entities.user.User;
 import com.loanapp.loanManagementSystem.enums.LoanType;
 import com.loanapp.loanManagementSystem.repository.LoanRepository;
 import com.loanapp.loanManagementSystem.service.loan.LoanService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 public class TestLoanController {
 

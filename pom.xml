@@ -28,9 +28,10 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
-		<junit.jupiter.version>5.11.3</junit.jupiter.version>
-		<junit.platform.version>1.11.3</junit.platform.version>
+		<java.version>24</java.version>
+		<lombok.version>1.18.42</lombok.version>
+<!--		<junit.jupiter.version>5.11.3</junit.jupiter.version>-->
+<!--		<junit.platform.version>1.11.3</junit.platform.version>-->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,10 +50,11 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
+		<groupId>org.projectlombok</groupId>
+		<artifactId>lombok</artifactId>
+		<version>${lombok.version}</version>          <!-- latest stable as of Dec 2025 -->
+		<scope>provided</scope>              <!-- change from optional to provided -->
+	</dependency>
 
 
 
@@ -87,19 +89,33 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>6.0.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>6.0.1</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.junit</groupId>
-				<artifactId>junit-bom</artifactId>
-				<version>${junit.jupiter.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+<!--	<dependencyManagement>-->
+<!--		<dependencies>-->
+<!--			<dependency>-->
+<!--				<groupId>org.junit</groupId>-->
+<!--				<artifactId>junit-bom</artifactId>-->
+<!--				<version>${junit.jupiter.version}</version>-->
+<!--				<type>pom</type>-->
+<!--				<scope>import</scope>-->
+<!--			</dependency>-->
+<!--		</dependencies>-->
+<!--	</dependencyManagement>-->
 
 
 	<build>
@@ -108,14 +124,99 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.13.0</version>   <!-- 3.13.0+ is safe for Java 21 -->
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<!-- Enable annotation processing for Lombok + MapStruct -->
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>1.6.3</version>
+						</path>
+						<!-- Required for Lombok + MapStruct to cooperate (builders, etc.) -->
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.0</version>
+				<configuration>
+					<!-- Helps prevent wrong JAR being loaded first -->
+					<useSystemClassLoader>false</useSystemClassLoader>
+					<useManifestOnlyJar>false</useManifestOnlyJar>
+					<!-- Makes debugging easier if it still fails -->
+					<trimStackTrace>false</trimStackTrace>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>3.6.0</version>
 			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.24.0</version>  <!-- latest stable -->
+			</plugin>
+
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.13</version>
+
+				<configuration>
+					<!-- Very important: this tells JaCoCo which classes to actually measure -->
+					<excludes>
+						<!-- Exclude entire packages (use ** for recursive) -->
+						<exclude>com/loanapp/loanManagementSystem/dto/**</exclude>
+						<exclude>com/loanapp/loanManagementSystem/entities/**</exclude>
+						<exclude>com/loanapp/loanManagementSystem/exception/**</exclude>
+						<exclude>com/loanapp/loanManagementSystem/enums/**</exclude>
+						<exclude>com/loanapp/loanManagementSystem/mapper/**</exclude>
+						<exclude>com/loanapp/loanManagementSystem/repository/**</exclude>
+						<!-- Exclude specific classes -->
+
+					</excludes>
+				</configuration>
+				<executions>
+
+					<!-- Prepare agent -->
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+
+					<!-- Generate report -->
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+
+				</executions>
 			</plugin>
 
 		</plugins>

@@ -7,6 +7,7 @@ import com.loanapp.loanManagementSystem.exception.ResourceNotFoundException;
 import com.loanapp.loanManagementSystem.mapper.loan.*;
 import com.loanapp.loanManagementSystem.repository.UserRepository;
 import com.loanapp.loanManagementSystem.repository.LoanRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class LoanServiceImpl implements LoanService{
 
     @Autowired
@@ -39,6 +41,8 @@ public class LoanServiceImpl implements LoanService{
 
     @Override
     public LoanDto createLoan(UUID userId, LoanDto loanDto) {
+
+        log.error("LoanDto runtime class = {}", loanDto.getClass().getName());
 
         User user=userRepository.findById(userId).orElseThrow(()->{
             return new ResourceNotFoundException("User id not found");

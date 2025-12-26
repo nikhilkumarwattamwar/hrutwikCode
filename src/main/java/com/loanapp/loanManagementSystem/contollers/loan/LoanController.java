@@ -3,19 +3,18 @@ package com.loanapp.loanManagementSystem.contollers.loan;
 import com.loanapp.loanManagementSystem.dto.loan.LoanDto;
 import com.loanapp.loanManagementSystem.service.loan.LoanService;
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 @RestController
-@Slf4j
 public class LoanController {
 
+    private static final Logger log=LoggerFactory.getLogger(LoanController.class);
 
     @Autowired
     LoanService service;

@@ -1,0 +1,36 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.loanapp:loanManagementSystem:jar:0.0.1-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-pmd-plugin is missing. @ line 122, column 12
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-checkstyle-plugin is missing. @ line 117, column 12
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ------------------< com.loanapp:loanManagementSystem >------------------
+[INFO] Building loan-management-system 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.9.0:tree (default-cli) @ loanManagementSystem ---
+[INFO] com.loanapp:loanManagementSystem:jar:0.0.1-SNAPSHOT
+[INFO] \- org.springframework.boot:spring-boot-starter-test:jar:4.0.0:test
+[INFO]    +- org.junit.jupiter:junit-jupiter:jar:6.0.1:test (version managed from 6.0.1)
+[INFO]    |  +- org.junit.jupiter:junit-jupiter-api:jar:6.0.1:test (version managed from 6.0.1)
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:6.0.1:test (version managed from 6.0.1)
+[INFO]    |  +- org.junit.jupiter:junit-jupiter-params:jar:6.0.1:test (version managed from 6.0.1)
+[INFO]    |  |  \- (org.junit.jupiter:junit-jupiter-api:jar:6.0.1:test - version managed from 6.0.1; omitted for duplicate)
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-engine:jar:6.0.1:test (version managed from 6.0.1)
+[INFO]    |     +- org.junit.platform:junit-platform-engine:jar:6.0.1:test (version managed from 6.0.1)
+[INFO]    |     |  \- (org.junit.platform:junit-platform-commons:jar:6.0.1:test - version managed from 6.0.1; omitted for duplicate)
+[INFO]    |     \- (org.junit.jupiter:junit-jupiter-api:jar:6.0.1:test - version managed from 6.0.1; omitted for duplicate)
+[INFO]    \- org.mockito:mockito-junit-jupiter:jar:5.20.0:test (version managed from 5.20.0)
+[INFO]       \- (org.junit.jupiter:junit-jupiter-api:jar:6.0.1:test - version managed from 5.13.4; omitted for duplicate)
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.386 s
+[INFO] Finished at: 2025-12-26T16:17:48+05:30
+[INFO] ------------------------------------------------------------------------

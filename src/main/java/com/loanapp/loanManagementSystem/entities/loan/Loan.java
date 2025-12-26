@@ -1,4 +1,6 @@
 package com.loanapp.loanManagementSystem.entities.loan;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 import com.loanapp.loanManagementSystem.entities.user.User;
 import com.loanapp.loanManagementSystem.enums.LoanType;
@@ -8,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -15,9 +18,9 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "loanCategory", discriminatorType = DiscriminatorType.STRING)
-public class Loan {
+public  class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
    private UUID loanId;
@@ -37,7 +40,10 @@ public class Loan {
     private boolean isActive=true;
 
     @ManyToOne
-     @JoinColumn(name = "userId" ,nullable = false)
+    @JoinColumn(name = "userId" ,nullable = false)
     User user;
+
+    @OneToMany(mappedBy = "loan")
+    List<Documents> documentsList;
 
 }
