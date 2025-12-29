@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TestUserService {
+public class UserServiceTest {
 
     @Mock
     UserRepository userRepository;

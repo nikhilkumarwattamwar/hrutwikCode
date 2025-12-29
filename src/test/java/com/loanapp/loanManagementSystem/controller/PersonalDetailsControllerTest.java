@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
-public class TestPersonalDetailsController {
+public class PersonalDetailsControllerTest {
 @Mock
  private    PersonalDetailsService service;
 

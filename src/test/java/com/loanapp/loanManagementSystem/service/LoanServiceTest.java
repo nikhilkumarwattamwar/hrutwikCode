@@ -6,6 +6,7 @@ import com.loanapp.loanManagementSystem.entities.loan.HomeLoan;
 import com.loanapp.loanManagementSystem.entities.loan.Loan;
 import com.loanapp.loanManagementSystem.entities.user.User;
 import com.loanapp.loanManagementSystem.enums.LoanType;
+import com.loanapp.loanManagementSystem.exception.ResourceNotFoundException;
 import com.loanapp.loanManagementSystem.mapper.loan.*;
 import com.loanapp.loanManagementSystem.repository.LoanRepository;
 import com.loanapp.loanManagementSystem.repository.UserRepository;
@@ -19,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,7 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TestLoanService {
+public class LoanServiceTest {
     @InjectMocks
    private LoanServiceImpl service;
 
@@ -93,6 +96,64 @@ public class TestLoanService {
     }
 
     @Test
+    @DisplayName("User not found")
+    void testUserNotFound(){
+        UUID random=UUID.randomUUID();
+        when(userRepository.findById(random)).thenReturn(Optional.empty());
+         assertThrows(ResourceNotFoundException.class,()->service.createLoan(random,loanDto));
+
+    }
+
+    @Test
+    @DisplayName("Throw exception when loan type is null")
+    void testLoanTypeNull(){
+        UUID random = UUID.randomUUID();
+        User user = new User();
+
+        LoanDto dto = new HomeLoanDto();
+
+        when(userRepository.findById(random))
+                .thenReturn(Optional.of(user));
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> service.createLoan(random, dto));
+
+        assertEquals("Loan type must not be null", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("Unsupported loan type")
+    void testUnsupportedLoanType(){
+        UUID userId = UUID.randomUUID();
+       LoanDto dto= new HomeLoanDto();
+       dto.setLoanType(null);
+        when(userRepository.findById(userId))
+                .thenReturn(Optional.of(user));
+
+        assertThrows(RuntimeException.class,
+                () -> service.createLoan(userId, dto));
+    }
+
+
+    @Test
+    @DisplayName("get list of all loan by user id")
+    void testGetAllLoanByUserId(){
+
+        List<Loan> loans=List.of(homeLoan);
+
+        when(loanRepository.findByUserId(userID)).thenReturn(Optional.of(loans));
+        when(loanMapper.toDto(homeLoan)).thenReturn(homeLoanDto);
+
+        List<LoanDto> result = service.getLoansByUserId(userID);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+
+        verify(loanRepository).findByUserId(userID);
+        verify(loanMapper).toDto(homeLoan);
+    }
+
+    @Test
     @DisplayName("Should update HOME loan successfully")
     void testUpdateLoan() {
 
@@ -114,6 +175,24 @@ public class TestLoanService {
         verify(homeLoanMapper).updateEntity(any(HomeLoanDto.class), any(HomeLoan.class));
         verify(loanRepository).save(any(Loan.class));
         verify(loanMapper).toDto(homeLoan);
+    }
+
+    @Test
+    @DisplayName("Throw exception when loan details are not found using loanId")
+    void testLoanNotFound(){
+        when(loanRepository.findByLoanIdAndIsActiveTrue(loanID)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,()->service.updateLoan(loanID,loanDto));
+    }
+
+    @Test
+    @DisplayName("Cannot update loan type")
+    void testChangeLoanType(){
+        homeLoan.setLoanType(LoanType.BUSINESS);
+        when(loanRepository.findByLoanIdAndIsActiveTrue(loanID)).thenReturn(Optional.ofNullable(homeLoan));
+
+        RuntimeException ex=assertThrows(RuntimeException.class,()->service.updateLoan(loanID,homeLoanDto));
+        assertEquals("Loan type cannot be changed",ex.getMessage());
     }
 
     @Test

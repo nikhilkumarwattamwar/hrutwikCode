@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TestCourseService {
+public class CourseServiceTest {
     @Mock
     CourseMapper mapper;
 
@@ -67,6 +67,14 @@ public class TestCourseService {
     }
 
     @Test
+    void testUserIdNotFound(){
+        UUID random= UUID.randomUUID();
+        when(courseRepository.findByUserId(random)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class,()->courseService.getCourseById(random));
+    }
+
+    @Test
     @DisplayName("getCourseById : Fetch course details by user ID")
     void testGetCourseById(){
 
@@ -93,6 +101,8 @@ public class TestCourseService {
         assertNotNull(result);
         verify(courseRepository).findByUserId(userID);
     }
+
+
 
 
 

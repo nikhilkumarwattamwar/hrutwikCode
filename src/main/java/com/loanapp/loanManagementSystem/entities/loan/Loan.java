@@ -3,6 +3,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
 import com.loanapp.loanManagementSystem.entities.user.User;
+import com.loanapp.loanManagementSystem.enums.LoanStatus;
 import com.loanapp.loanManagementSystem.enums.LoanType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,11 @@ public  class Loan {
     private Double interestRate;
 
     private Integer tenure;
+
+    @Enumerated(EnumType.STRING)
+    private LoanStatus loanStaus;
+
+    String rejectionReason;
 
     @Column(name = "isActive" ,nullable = false)
     private boolean isActive=true;

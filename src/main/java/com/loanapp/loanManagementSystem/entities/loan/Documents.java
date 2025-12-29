@@ -16,7 +16,7 @@ import lombok.Setter;
 public class Documents {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long documentId;
+    private Integer documentId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -26,7 +26,7 @@ public class Documents {
     private String fileName;
 
     @Column(nullable = false)
-    private String contentType; // image/png, image/jpeg
+    private String contentType;
 
     @Lob
     @Column(nullable = false)

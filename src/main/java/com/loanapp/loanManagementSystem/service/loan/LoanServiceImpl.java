@@ -42,8 +42,6 @@ public class LoanServiceImpl implements LoanService{
     @Override
     public LoanDto createLoan(UUID userId, LoanDto loanDto) {
 
-        log.error("LoanDto runtime class = {}", loanDto.getClass().getName());
-
         User user=userRepository.findById(userId).orElseThrow(()->{
             return new ResourceNotFoundException("User id not found");
         });
@@ -149,19 +147,19 @@ public class LoanServiceImpl implements LoanService{
                 break;
             case EDUCATION:
                 if (!(loanDto instanceof EducationLoanDto educationLoanDto)) {
-                    throw new IllegalArgumentException("Expected EducationLoanDto");
+                    throw new RuntimeException("Expected EducationLoanDto");
                 }
                 educationLoanMapper.updateEntity(educationLoanDto, (EducationLoan) loan);
                 break;
             case HOME:
                 if (!(loanDto instanceof HomeLoanDto homeLoanDto)) {
-                    throw new IllegalArgumentException("Expected HomeLoanDto");
+                    throw new RuntimeException("Expected HomeLoanDto");
                 }
                 homeLoanMapper.updateEntity(homeLoanDto, (HomeLoan) loan);
                 break;
             case BUSINESS:
                 if (!(loanDto instanceof BusinessLoanDto businessLoanDto)) {
-                    throw new IllegalArgumentException("Expected BusinessLoanDto");
+                    throw new RuntimeException("Expected BusinessLoanDto");
                 }
                 businessMapper.updateEntity(businessLoanDto, (BusinessLoan) loan);
                 break;

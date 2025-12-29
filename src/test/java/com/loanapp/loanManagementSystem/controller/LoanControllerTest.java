@@ -3,10 +3,7 @@ package com.loanapp.loanManagementSystem.controller;
 import com.loanapp.loanManagementSystem.contollers.loan.LoanController;
 import com.loanapp.loanManagementSystem.dto.loan.HomeLoanDto;
 import com.loanapp.loanManagementSystem.dto.loan.LoanDto;
-import com.loanapp.loanManagementSystem.entities.loan.HomeLoan;
-import com.loanapp.loanManagementSystem.entities.user.User;
 import com.loanapp.loanManagementSystem.enums.LoanType;
-import com.loanapp.loanManagementSystem.repository.LoanRepository;
 import com.loanapp.loanManagementSystem.service.loan.LoanService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-public class TestLoanController {
+public class LoanControllerTest {
 
     @InjectMocks
     LoanController controller;

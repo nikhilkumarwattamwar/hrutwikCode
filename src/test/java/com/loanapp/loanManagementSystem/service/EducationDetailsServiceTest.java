@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TestEducationDetailsService {
+public class EducationDetailsServiceTest {
     @InjectMocks
     EducationServiceImpl educationService;
 

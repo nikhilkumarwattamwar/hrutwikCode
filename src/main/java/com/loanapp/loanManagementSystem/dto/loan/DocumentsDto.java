@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DocumentsDto {
-    private Long documentId;
+    private Integer documentId;
     private DocumentType documentType;
     private String fileName;
     private String contentType;
