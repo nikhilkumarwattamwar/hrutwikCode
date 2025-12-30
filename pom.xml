@@ -198,6 +198,7 @@
 						<exclude>com/loanapp/loanManagementSystem/enums/**</exclude>
 						<exclude>com/loanapp/loanManagementSystem/mapper/**</exclude>
 						<exclude>com/loanapp/loanManagementSystem/repository/**</exclude>
+						<exclude>com/loanapp/loanManagementSystem/LoanManagementSystemApplication*</exclude>
 						<!-- Exclude specific classes -->
 
 					</excludes>

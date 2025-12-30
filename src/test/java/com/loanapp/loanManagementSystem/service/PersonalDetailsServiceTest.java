@@ -3,6 +3,7 @@ package com.loanapp.loanManagementSystem.service;
 import com.loanapp.loanManagementSystem.dto.user.PersonalDto;
 import com.loanapp.loanManagementSystem.entities.user.PersonalDetails;
 import com.loanapp.loanManagementSystem.entities.user.User;
+import com.loanapp.loanManagementSystem.exception.ResourceNotFoundException;
 import com.loanapp.loanManagementSystem.mapper.user.PersonalDetailsMapper;
 import com.loanapp.loanManagementSystem.repository.PersonalDetailsRepository;
 import com.loanapp.loanManagementSystem.repository.UserRepository;
@@ -91,6 +92,41 @@ public class PersonalDetailsServiceTest {
 
     }
 
+    @Test
+    @DisplayName("Throw exception when user id is not found")
+    void testUserIdNotFound(){
+        UUID id=UUID.randomUUID();
+
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        RuntimeException exception=assertThrows(RuntimeException.class,()->personalDetailsService.saveDetailsById(new PersonalDto(),id));
+
+        assertEquals("ID does not exist",exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Throw exception when user id not found while fetching personal details")
+    void testGet_UserIdNotFound(){
+        UUID id=UUID.randomUUID();
+
+        when(detailsRepository.findByUserId(id)).thenReturn(Optional.empty());
+
+        RuntimeException exception=assertThrows(RuntimeException.class,()->personalDetailsService.getDetailsByID(id));
+
+        assertEquals("ID does not exists",exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Throw exception when user id not found while updating personal details")
+    void testUpdate_UserIdNotFound(){
+        UUID id=UUID.randomUUID();
+
+        when(detailsRepository.findByUserId(id)).thenReturn(Optional.empty());
+
+        RuntimeException exception=assertThrows(RuntimeException.class,()->personalDetailsService.updateDetails(new PersonalDto(),id));
+
+        assertEquals("User Id not found",exception.getMessage());
+    }
 
 
 }

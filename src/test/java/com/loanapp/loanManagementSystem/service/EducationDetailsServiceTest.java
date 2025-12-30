@@ -3,6 +3,7 @@ package com.loanapp.loanManagementSystem.service;
 import com.loanapp.loanManagementSystem.dto.user.EducationDto;
 import com.loanapp.loanManagementSystem.entities.user.EducationDetails;
 import com.loanapp.loanManagementSystem.entities.user.User;
+import com.loanapp.loanManagementSystem.enums.ExamPassed;
 import com.loanapp.loanManagementSystem.mapper.user.EducationMapper;
 import com.loanapp.loanManagementSystem.repository.EducationRepository;
 import com.loanapp.loanManagementSystem.repository.UserRepository;
@@ -18,8 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -111,19 +111,80 @@ public class EducationDetailsServiceTest {
     @DisplayName("updateEducationDetail : Update existing education details for user")
     void testUpdateEducationDetail() {
 
-        user.setEducationDetailsList(Arrays.asList(entity));
+        user.setEducationDetailsList(entityList);
+        dto.setExamPassed(ExamPassed.SSC);
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        when(educationRepository.findByUserIdAndExamPassed(eq(id),any())).thenReturn(Optional.of(entity));
+        when(educationRepository.findByUserIdAndExamPassed(id,ExamPassed.SSC)).thenReturn(Optional.of(entity));
 
-        List<EducationDto> result =
-                educationService.updateEducationDetail(dtoList, id);
+        List<EducationDto> result = educationService.updateEducationDetail(dtoList, id);
 
         assertNotNull(result);
 
         verify(userRepository).findById(id);
         verify(mapper).updateFromDtoToEntity(dto, entity);
         verify(userRepository).save(user);
+    }
+
+    @Test
+    @DisplayName("Should create new education details if it does not exist ")
+    void testCreateWhileUpdating(){
+
+        UUID id=UUID.randomUUID();
+        User user1= new User();
+
+        when(userRepository.findById(id)).thenReturn(Optional.ofNullable(user1));
+
+        user.setEducationDetailsList(new ArrayList<>());
+
+        EducationDto educationDto= new EducationDto();
+        educationDto.setExamPassed(ExamPassed.SSC);
+
+        EducationDetails details= new EducationDetails();
+
+        when(educationRepository.findByUserIdAndExamPassed(id,ExamPassed.SSC)).thenReturn(Optional.empty());
+
+        when(mapper.toEntity(educationDto)).thenReturn(details);
+
+        when(mapper.toDtoList(anyList())).thenReturn(List.of(educationDto));
+
+        List<EducationDto> result=educationService.updateEducationDetail(List.of(educationDto),id);
+
+        assertNotNull(result);
+        assertEquals(1,result.size());
+
+    }
+
+    @Test
+    @DisplayName("User id not found")
+    void testUserIdNotFound(){
+        UUID id= UUID.randomUUID();
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        RuntimeException exception=assertThrows(RuntimeException.class,()->educationService.saveEducationDetail(dtoList,id));
+
+        assertEquals("User ID not found",exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("User id not found while fetching education details")
+    void testGet_UserIdNotFound(){
+        when(educationRepository.findAllByUserId(id)).thenReturn(Optional.empty());
+
+        RuntimeException exception=assertThrows(RuntimeException.class,()->educationService.getEducationDetailById(id));
+
+        assertEquals("User ID not found",exception.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("")
+    void testUpdate_UserIDNotFound(){
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
+
+        RuntimeException exception=assertThrows(RuntimeException.class,()->educationService.updateEducationDetail(dtoList,id));
+
+        assertEquals("User ID not found",exception.getMessage());
     }
 
 }

@@ -5,6 +5,7 @@ public enum LoanType {
     HOME,
     EDUCATION,
     PERSONAL,
-    BUSINESS
+    BUSINESS,
+    FAKE
 
 }

@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -83,13 +84,26 @@ public class DocumentServiceTest {
         when(loanRepository.findByLoanIdAndIsActiveTrue(loanId)).thenReturn(Optional.empty());
 
 
-        ResourceNotFoundException ex =
-                assertThrows(ResourceNotFoundException.class,
-                        () -> documentsService.uploadDocument(loanId, DocumentType.AADHAAR, file));
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> documentsService.uploadDocument(loanId, DocumentType.AADHAAR, file));
 
         assertEquals("Loan not found", ex.getMessage());
 
         verify(loanRepository).findByLoanIdAndIsActiveTrue(loanId);
+    }
+
+    @Test
+    @DisplayName("Throw exception when failed to store a file")
+    void testFailedToStoreFile() throws IOException {
+        UUID id=UUID.randomUUID();
+        Loan loan=mock(Loan.class);
+        MultipartFile file = mock(MultipartFile.class);
+
+        when(loanRepository.findByLoanIdAndIsActiveTrue(id)).thenReturn(Optional.ofNullable(loan));
+
+        when(file.getBytes()).thenThrow( new IOException("File error"));
+
+        RuntimeException exception=assertThrows(RuntimeException.class,()->documentsService.uploadDocument(id,DocumentType.PAN,file));
+        assertEquals("failed to store a document", exception.getMessage());
     }
 
     @Test
@@ -132,7 +146,7 @@ public class DocumentServiceTest {
 
         String result = documentsService.softDeleteDocument(1);
 
-        assertEquals("Documets deleted successfully ", result);
+        assertEquals("Documents deleted successfully ", result);
         assertFalse(documents.isActive());
 
         verify(documentsRepository, times(1)).save(documents);

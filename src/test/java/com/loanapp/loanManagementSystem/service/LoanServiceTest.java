@@ -1,5 +1,6 @@
 package com.loanapp.loanManagementSystem.service;
 
+import com.loanapp.loanManagementSystem.dto.loan.BusinessLoanDto;
 import com.loanapp.loanManagementSystem.dto.loan.HomeLoanDto;
 import com.loanapp.loanManagementSystem.dto.loan.LoanDto;
 import com.loanapp.loanManagementSystem.entities.loan.HomeLoan;
@@ -122,16 +123,34 @@ public class LoanServiceTest {
     }
 
     @Test
+    @DisplayName("Throw exception for wrong home loan dto")
+    void testWrongHomeLoanDto(){
+        UUID userId = UUID.randomUUID();
+        User user = new User();
+
+        LoanDto loanDto = new BusinessLoanDto();
+        loanDto.setLoanType(LoanType.HOME);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> service.createLoan(userId, loanDto));
+
+        assertEquals("Expected HomeLoanDto for HOME loan", ex.getMessage());
+    }
+
+    @Test
     @DisplayName("Unsupported loan type")
     void testUnsupportedLoanType(){
         UUID userId = UUID.randomUUID();
        LoanDto dto= new HomeLoanDto();
-       dto.setLoanType(null);
+       dto.setLoanType(LoanType.FAKE);
         when(userRepository.findById(userId))
                 .thenReturn(Optional.of(user));
 
-        assertThrows(RuntimeException.class,
+        RuntimeException exception=assertThrows(RuntimeException.class,
                 () -> service.createLoan(userId, dto));
+
+        assertEquals("Unsupported loan type",exception.getMessage());
     }
 
 
@@ -151,6 +170,20 @@ public class LoanServiceTest {
 
         verify(loanRepository).findByUserId(userID);
         verify(loanMapper).toDto(homeLoan);
+    }
+
+    @Test
+    @DisplayName("Throw exception when user id not found while getting loan details ")
+    void testUserIdNotFound(){
+        UUID id=UUID.randomUUID();
+
+        when(loanRepository.findByUserId(id)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception=assertThrows(ResourceNotFoundException.class,()->service.getLoansByUserId(id));
+
+        assertEquals("user id not found",exception.getMessage());
+        verify(loanRepository).findByUserId(id);
+
     }
 
     @Test
@@ -179,11 +212,13 @@ public class LoanServiceTest {
 
     @Test
     @DisplayName("Throw exception when loan details are not found using loanId")
-    void testLoanNotFound(){
+    void testWhileUpdatingLoanNotFound(){
         when(loanRepository.findByLoanIdAndIsActiveTrue(loanID)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,()->service.updateLoan(loanID,loanDto));
     }
+
+
 
     @Test
     @DisplayName("Cannot update loan type")
@@ -193,6 +228,47 @@ public class LoanServiceTest {
 
         RuntimeException ex=assertThrows(RuntimeException.class,()->service.updateLoan(loanID,homeLoanDto));
         assertEquals("Loan type cannot be changed",ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("Throws exception if DTO type does not match HOME loan")
+    void testWrongDtoInfo(){
+
+        UUID id=UUID.randomUUID();
+
+        HomeLoan loan= new HomeLoan();
+        loan.setLoanType(LoanType.HOME);
+
+        LoanDto wrong=new LoanDto();
+        wrong.setLoanType(LoanType.HOME);
+
+        when(loanRepository.findByLoanIdAndIsActiveTrue(id)).thenReturn(Optional.ofNullable(loan));
+
+        RuntimeException exception=assertThrows(RuntimeException.class,()->service.updateLoan(id,wrong));
+
+        assertEquals("Expected HomeLoanDto",exception.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("Unsupported loan type while updating ")
+    void testUpdate_UnsupportedLoanType(){
+        UUID loanId = UUID.randomUUID();
+
+        Loan loan = new Loan();
+        loan.setLoanType(LoanType.FAKE);
+
+        LoanDto dto = new LoanDto();
+        dto.setLoanType(LoanType.FAKE);
+
+        when(loanRepository.findByLoanIdAndIsActiveTrue(loanId))
+                .thenReturn(Optional.of(loan));
+
+        RuntimeException ex = assertThrows(RuntimeException.class,
+                () -> service.updateLoan(loanId, dto));
+
+        assertEquals("Unsupported loan type", ex.getMessage());
+
     }
 
     @Test
@@ -208,6 +284,17 @@ public class LoanServiceTest {
 
         verify(loanRepository).findById(loanID);
         verify(loanRepository).save(homeLoan);
+    }
+
+    @Test
+    @DisplayName("Throw exception when loan id is not found while deleting loan details")
+    void testLoanIdNotFoundWhileDeleting(){
+        UUID id=UUID.randomUUID();
+        when(loanRepository.findById(id)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception=assertThrows(ResourceNotFoundException.class,()->service.deleteLoan(id));
+
+        assertEquals("Loan id not found",exception.getMessage());
     }
 
     @Test
@@ -228,7 +315,5 @@ public class LoanServiceTest {
         verify(loanRepository).findById(loanID);
         verify(loanMapper).toDto(homeLoan);
     }
-
-
 
 }

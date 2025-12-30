@@ -80,15 +80,18 @@ public class AdminServiceTest {
     }
 
     @Test
-    @DisplayName("Throw exception when loan id is not found")
-    void testLoanIDNotFound(){
+    @DisplayName("Loan id not found")
+    void testLoanIdNotFound(){
         UUID random=UUID.randomUUID();
         when(loanRepository.findByLoanIdAndIsActiveTrue(random)).thenReturn(Optional.empty());
-        ResourceNotFoundException ex=assertThrows(ResourceNotFoundException.class,()->service.getLoanByLoanId(random));
 
-        assertEquals("Loan ID not found",ex.getMessage());
-        verify(loanMapper,never()).toDto(any());
+        ResourceNotFoundException exception=assertThrows(ResourceNotFoundException.class,()->service.approveLoan(random));
+
+
+        assertEquals("Loan ID not found",exception.getMessage());
+        verify(loanRepository).findByLoanIdAndIsActiveTrue(random);
     }
+
 
     @Test
     @DisplayName("Should approve the loan")
@@ -109,6 +112,17 @@ public class AdminServiceTest {
         assertNotNull(result);
         verify(loanRepository).findByLoanIdAndIsActiveTrue(id);
 
+    }
+
+    @Test
+    @DisplayName("Throw exception when loan id is not found")
+    void testLoanIDNotFound(){
+        UUID random=UUID.randomUUID();
+        when(loanRepository.findByLoanIdAndIsActiveTrue(random)).thenReturn(Optional.empty());
+        ResourceNotFoundException ex=assertThrows(ResourceNotFoundException.class,()->service.getLoanByLoanId(random));
+
+        assertEquals("Loan ID not found",ex.getMessage());
+        verify(loanMapper,never()).toDto(any());
     }
 
     @Test
@@ -133,6 +147,20 @@ public class AdminServiceTest {
 
         verify(loanRepository).findByLoanIdAndIsActiveTrue(id);
         verify(loanRepository).save(loan);
+    }
+
+    @Test
+    @DisplayName("Throw exception when loan id is not found")
+    void testLoanIDNotFoundWhileRejecting(){
+        UUID random=UUID.randomUUID();
+        String reason="xya";
+        when(loanRepository.findByLoanIdAndIsActiveTrue(random)).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception=assertThrows(ResourceNotFoundException.class,()->service.rejectLoan(random,reason));
+
+
+        assertEquals("Loan ID not found",exception.getMessage());
+        verify(loanRepository).findByLoanIdAndIsActiveTrue(random);
     }
 
     @Test

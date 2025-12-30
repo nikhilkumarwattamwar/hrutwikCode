@@ -9,7 +9,6 @@ import com.loanapp.loanManagementSystem.repository.DocumentsRepository;
 import com.loanapp.loanManagementSystem.repository.LoanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,7 +60,7 @@ public class DocumentsServiceImpl implements DocumentsService{
 
         documentsRepository.save(documents);
 
-        return  "Documets deleted successfully ";
+        return  "Documents deleted successfully ";
 
 
     }

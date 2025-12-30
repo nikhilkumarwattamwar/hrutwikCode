@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -21,89 +22,89 @@ import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
 public class AdminControllerTest {
-@InjectMocks
+    @InjectMocks
     AdminController controller;
 
-@Mock
+    @Mock
     AdminService service;
 
-@Mock
+    @Mock
     LoanRepository repository;
 
-@Test
+    @Test
     @DisplayName("Shoud get all existing loans")
-    void testGetAllLoans(){
+    void testGetAllLoans() {
 
-    LoanDto dto= new LoanDto();
+        LoanDto dto = new LoanDto();
 
-   when(service.getAllLoan()).thenReturn(List.of(dto));
+        when(service.getAllLoan()).thenReturn(List.of(dto));
 
-    List<LoanDto> result=controller.getAllLoans();
+        List<LoanDto> result = controller.getAllLoans();
 
-    assertNotNull(result);
-    assertEquals(1,result.size());
+        assertNotNull(result);
+        assertEquals(1, result.size());
 
-    verify(service,times(1)).getAllLoan();
+        verify(service, times(1)).getAllLoan();
 
-}
+    }
 
-@Test
+    @Test
     @DisplayName("Should get loan details by loan id")
-     void testGetLoanByLoanId(){
-    UUID id=UUID.randomUUID();
-    LoanDto dto= new LoanDto();
+    void testGetLoanByLoanId() {
+        UUID id = UUID.randomUUID();
+        LoanDto dto = new LoanDto();
 
-    when(service.getLoanByLoanId(id)).thenReturn(dto);
+        when(service.getLoanByLoanId(id)).thenReturn(dto);
 
-    LoanDto result=controller.getLoanByLoanId(id);
+        LoanDto result = controller.getLoanByLoanId(id);
 
-    assertNotNull(result);
-    verify(service,times(1)).getLoanByLoanId(id);
-}
+        assertNotNull(result);
+        verify(service, times(1)).getLoanByLoanId(id);
+    }
 
-@Test
+    @Test
     @DisplayName("Should approve the loan")
-    void testApproveTheLoan(){
-    UUID id=UUID.randomUUID();
-    LoanDto dto= new LoanDto();
-    when(service.approveLoan(id)).thenReturn(dto);
+    void testApproveTheLoan() {
+        UUID id = UUID.randomUUID();
+        LoanDto dto = new LoanDto();
+        when(service.approveLoan(id)).thenReturn(dto);
 
-    LoanDto result=controller.apprroveLoan(id);
-    assertNotNull(result);
-    verify(service,times(1)).approveLoan(id);
-}
+        LoanDto result = controller.apprroveLoan(id);
+        assertNotNull(result);
+        verify(service, times(1)).approveLoan(id);
+    }
 
-@Test
+    @Test
     @DisplayName("Should reject the loan")
-    void testRejectTheLoan(){
-    UUID id=UUID.randomUUID();
-    String reason="low credit score";
+    void testRejectTheLoan() {
+        UUID id = UUID.randomUUID();
+        String reason = "low credit score";
 
-    LoanDto dto= new LoanDto();
-    dto.setLoanId(id);
+        LoanDto dto = new LoanDto();
+        dto.setLoanId(id);
 
-    when(service.rejectLoan(id,reason)).thenReturn(dto);
+        when(service.rejectLoan(id, reason)).thenReturn(dto);
 
-    LoanDto result=controller.rejectLoan(id,reason);
+        LoanDto result = controller.rejectLoan(id, reason);
 
-    verify(service,times(1)).rejectLoan(id,reason);
-}
+        verify(service, times(1)).rejectLoan(id, reason);
+    }
 
-@Test
+    @Test
     @DisplayName("Should get all users")
-    void testGetAllUsers(){
-    UUID id=UUID.randomUUID();
-    UserDto dto= new UserDto();
+    void testGetAllUsers() {
+        UUID id = UUID.randomUUID();
+        UserDto dto = new UserDto();
 
-    when(service.getAllUsers()).thenReturn(List.of(dto));
+        when(service.getAllUsers()).thenReturn(List.of(dto));
 
-    List<UserDto> result =controller.getAllUsers();
+        List<UserDto> result = controller.getAllUsers();
 
-    assertNotNull(result);
-    assertEquals(1,result.size());
+        assertNotNull(result);
+        assertEquals(1, result.size());
 
-    verify(service,times(1)).getAllUsers();
+        verify(service, times(1)).getAllUsers();
 
-}
+    }
 
 }
