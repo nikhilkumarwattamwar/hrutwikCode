@@ -1,11 +1,11 @@
 package Devonox.oktaauthentication.dto;
 
+import Devonox.oktaauthentication.enums.Role;
 import jakarta.validation.constraints.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Data
+
 @Getter
 @Setter
 public class RegisterRequest {
@@ -29,47 +29,16 @@ public class RegisterRequest {
     @NotNull(message = "Role is required")
     private Role role;
 
-    public String getName() {
-        return name;
-    }
 
     @Override
     public String toString() {
         return "RegisterRequest{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", role=" + role +
                 '}';
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 
 
 }

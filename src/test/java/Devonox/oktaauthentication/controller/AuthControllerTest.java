@@ -3,15 +3,15 @@ package Devonox.oktaauthentication.controller;
 import Devonox.oktaauthentication.dto.JwtResponse;
 import Devonox.oktaauthentication.dto.LoginRequest;
 import Devonox.oktaauthentication.dto.RegisterRequest;
-import Devonox.oktaauthentication.dto.Role;
+import Devonox.oktaauthentication.enums.Role;
 import Devonox.oktaauthentication.security.JwtUtil;
-import Devonox.oktaauthentication.service.OktaAuthService;
 import Devonox.oktaauthentication.service.impl.OktaAuthServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.junit.jupiter.api.DisplayName;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +46,7 @@ class AuthControllerTest {
 
 
     @Test
+    @DisplayName("login(): should return true when username and password are authenticated and responds with JWT token")
     void login_success_shouldReturnJwt() {
 
         LoginRequest request = new LoginRequest();
@@ -76,6 +77,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("login(): should return false when username and password are invalid and responds with UNAUTHORIZED 401")
     void login_invalidCredentials_shouldReturn401() {
 
         LoginRequest request = new LoginRequest();
@@ -95,6 +97,7 @@ class AuthControllerTest {
 
 
     @Test
+    @DisplayName("register(): should create user and assign role successfully")
     void register_success_shouldAssignRole() {
 
         RegisterRequest request = new RegisterRequest();
@@ -120,6 +123,7 @@ class AuthControllerTest {
     }
 
     @Test
+    @DisplayName("register(): should return fallback message when role assignment fails")
     void register_roleAssignmentFails_shouldReturnFallbackMessage() {
 
         RegisterRequest request = new RegisterRequest();

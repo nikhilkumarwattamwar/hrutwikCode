@@ -1,11 +1,12 @@
 package Devonox.oktaauthentication.service;
 
 import Devonox.oktaauthentication.dto.RegisterRequest;
-import Devonox.oktaauthentication.dto.Role;
+import Devonox.oktaauthentication.enums.Role;
 import Devonox.oktaauthentication.security.JwtUtil;
 import Devonox.oktaauthentication.service.impl.OktaAuthServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -47,12 +48,13 @@ class OktaAuthServiceTest {
                     "/groups/{groupId}/users/{userId}",
                     "LOAN_GROUP",
                     "USER_GROUP",
-                    "ADMIN_GROUP",new JwtUtil("kl",5655)
+                    "ADMIN_GROUP",new JwtUtil("ThisIsA32CharacterMinimumSecureJwtSecretKey!!",5655)
             );
         }
 
 
     @Test
+    @DisplayName(" should return true when Okta returns SUCCESS")
     void authenticate_success_shouldReturnTrue() {
 
         ClientResponse response = ClientResponse.create(HttpStatus.OK)
@@ -71,6 +73,7 @@ class OktaAuthServiceTest {
     }
 
     @Test
+    @DisplayName("authenticate(): should return false when Okta responds with Unauthorized error")
     void authenticate_error_shouldReturnFalse() {
 
         WebClientResponseException ex =
@@ -95,6 +98,7 @@ class OktaAuthServiceTest {
 
 
     @Test
+    @DisplayName("getUserGroups(): should return list of group names when Okta responds with groups")
     void getUserGroups_shouldReturnGroupNames() {
 
         ClientResponse response = ClientResponse.create(HttpStatus.OK)
@@ -120,6 +124,7 @@ class OktaAuthServiceTest {
     }
 
     @Test
+    @DisplayName("getUserGroups(): should return false with Okta responds with Unauthorized error")
     void getUserGroups_error_shouldThrowException() {
 
         WebClientResponseException ex =
@@ -144,6 +149,7 @@ class OktaAuthServiceTest {
 
 
     @Test
+    @DisplayName("getUserFullName(): should return full name ")
     void getUserFullName_shouldReturnFullName() {
 
         ClientResponse response = ClientResponse.create(HttpStatus.OK)
@@ -169,6 +175,7 @@ class OktaAuthServiceTest {
     }
 
     @Test
+    @DisplayName("getUserFullName(): should throw exception when Okta responds with Not Found error")
     void getUserFullName_error_shouldThrowException() {
 
         WebClientResponseException ex =
@@ -193,6 +200,7 @@ class OktaAuthServiceTest {
 
 
     @Test
+    @DisplayName("createUser(): should create user in okta when Okta responds user_id")
     void createUser_shouldReturnUserId() {
 
         RegisterRequest request = new RegisterRequest();
@@ -215,6 +223,7 @@ class OktaAuthServiceTest {
     }
 
     @Test
+    @DisplayName("createUser(): should throw exception when Okta responds with Bad Request ")
     void createUser_errorStatus_shouldThrowRuntimeException() {
 
         RegisterRequest request = new RegisterRequest();
@@ -242,6 +251,7 @@ class OktaAuthServiceTest {
 
 
     @Test
+    @DisplayName("assignRoleToUser(): should complete successfully when Okta responds with 200")
     void assignRoleToUser_shouldCompleteSuccessfully() {
 
         ClientResponse response = ClientResponse.create(HttpStatus.OK).build();
@@ -259,6 +269,7 @@ class OktaAuthServiceTest {
 
 
     @Test
+    @DisplayName("getGroupIdForRole(): should return correct Okta group ID for each role")
     void getGroupIdForRole_shouldReturnCorrectGroupIds() {
 
         assertEquals("USER_GROUP",

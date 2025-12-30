@@ -1,19 +1,15 @@
 package Devonox.oktaauthentication.service.impl;
 
 
-import Devonox.oktaauthentication.dto.JwtResponse;
-import Devonox.oktaauthentication.dto.LoginRequest;
 import Devonox.oktaauthentication.dto.RegisterRequest;
-import Devonox.oktaauthentication.dto.Role;
+import Devonox.oktaauthentication.enums.Role;
 import Devonox.oktaauthentication.security.JwtUtil;
 import Devonox.oktaauthentication.service.OktaAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -22,6 +18,13 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Map;
 
+
+
+/**
+ * Service responsible for authenticating users and managing user data in Okta.
+ *
+ * This service handles authentication, user creation,group-based role assignment, and user profile retrieval.
+ */
 @Service
 public class OktaAuthServiceImpl implements OktaAuthService {
 
@@ -88,6 +91,13 @@ public class OktaAuthServiceImpl implements OktaAuthService {
 
 
 
+    /**
+     * Authentictes a user using Okta credentials.
+     *
+     * @param username user login identifier
+     * @param password user secret
+     * @return authentication result
+     */
     public Mono<Boolean> authenticate(String username, String password) {
         log.info("Authenticate User with UseName : " + username);
 
@@ -109,6 +119,13 @@ public class OktaAuthServiceImpl implements OktaAuthService {
                     return Mono.just(false);
                 });
     }
+
+    /**
+     *
+     * get the groups assign to the user from okta.
+     * @param apiToken Okta API token
+     * @return list of group names
+     */
     public Mono<List<String>> getUserGroups(String userLogin, String apiToken) {
 
         log.info("Fetching groups for users : "+ userLogin);
@@ -129,7 +146,13 @@ public class OktaAuthServiceImpl implements OktaAuthService {
 
 
 
-
+    /**
+     *
+     * get the Full name assign to the user from okta.
+     * @param login (username ) user identifier
+     * @param apiToken Okta API token
+     * @return Full name  of user from okta
+     */
     public Mono<String> getUserFullName(String login, String apiToken) {
 
         log.debug("Fetching fll name for user : ", login);
@@ -150,6 +173,13 @@ public class OktaAuthServiceImpl implements OktaAuthService {
 
     }
 
+    /**
+     *
+     * Create the new user in okta .
+     * @param request get the user data
+     * @param apiToken Okta API token
+     * @return message that user created successfully
+     */
     public Mono<String> createUser(RegisterRequest request, String apiToken) {
 
         log.info("Creating Okta suer with email : "+ request.getEmail() +" name : "+request.getName());
@@ -197,6 +227,14 @@ public class OktaAuthServiceImpl implements OktaAuthService {
     }
 
 
+    /**
+     *
+     * Assign role to the user within okta.
+     * @param userId  okta user identifier
+     * @param apiToken Okta API token
+     * @param role user role
+     * @return Full name  of user from okta
+     */
     public Mono<Void> assignRoleToUser(String userId, Role role, String apiToken) {
 
         String groupId = getGroupIdForRole(role);
@@ -217,6 +255,12 @@ public class OktaAuthServiceImpl implements OktaAuthService {
 
 
 
+    /**
+     * Resolves the Okta group identifier for a given role.
+     *
+     * @param role application role
+     * @return Okta group identifier
+     */
     public String getGroupIdForRole(Role role) {
         return switch (role) {
             case USER -> userGroupId;

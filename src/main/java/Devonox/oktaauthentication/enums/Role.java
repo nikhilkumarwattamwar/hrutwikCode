@@ -1,4 +1,4 @@
-package Devonox.oktaauthentication.dto;
+package Devonox.oktaauthentication.enums;
 
 public enum Role {
     USER,
