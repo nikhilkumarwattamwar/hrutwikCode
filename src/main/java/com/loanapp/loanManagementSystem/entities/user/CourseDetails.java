@@ -62,13 +62,13 @@ public class CourseDetails {
     @JoinColumn(name = "userId")
     private User user;
 
-    @Column(name = "isActive" ,nullable = false)
-    private boolean isActive=true;
+    @Column(name = "isActive", nullable = false)
+    private boolean isActive = true;
 
 
     @PrePersist
     public void onCreate() {
-        this.isActive=true;
+        this.isActive = true;
     }
 
 

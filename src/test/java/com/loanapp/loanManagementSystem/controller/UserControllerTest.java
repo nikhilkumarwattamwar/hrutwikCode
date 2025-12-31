@@ -1,4 +1,5 @@
 package com.loanapp.loanManagementSystem.controller;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -40,15 +42,15 @@ public class UserControllerTest {
 
     }
 
-    @Test
-    void testAddUser() {
-        when(userService.createUser(any(UserDto.class))).thenReturn(sampleUser);
-
-        UserDto result = userController.addUser(sampleUser);
-
-        assertEquals(sampleUser.getEmail(), result.getEmail());
-        verify(userService, times(1)).createUser(sampleUser);
-    }
+//    @Test
+//    void testAddUser() {
+//        when(userService.createUser(any(UserDto.class))).thenReturn(sampleUser);
+//
+//        UserDto result = userController.addUser(sampleUser);
+//
+//        assertEquals(sampleUser.getEmail(), result.getEmail());
+//        verify(userService, times(1)).createUser(sampleUser);
+//    }
 
     @Test
     void testGetAllUserDetails() {

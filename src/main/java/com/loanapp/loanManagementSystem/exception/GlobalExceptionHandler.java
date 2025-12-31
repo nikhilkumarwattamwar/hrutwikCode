@@ -13,26 +13,26 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    public final Logger log= LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    public final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException e, WebRequest request){
-        ErrorDetails details= new ErrorDetails(HttpStatus.NOT_FOUND,e.getMessage(), request.getDescription(false), LocalDateTime.now());
-        log.warn("ResourceNotFound : "+e.getMessage());
-        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(details);
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException e, WebRequest request) {
+        ErrorDetails details = new ErrorDetails(HttpStatus.NOT_FOUND, e.getMessage(), request.getDescription(false), LocalDateTime.now());
+        log.warn("ResourceNotFound : " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(details);
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ErrorDetails> handleBadRequestException(BadRequestException e, WebRequest request){
-        ErrorDetails details= new ErrorDetails(HttpStatus.BAD_REQUEST,e.getMessage(), request.getDescription(false), LocalDateTime.now());
-        log.warn("BadRequest : "+e.getMessage());
+    public ResponseEntity<ErrorDetails> handleBadRequestException(BadRequestException e, WebRequest request) {
+        ErrorDetails details = new ErrorDetails(HttpStatus.BAD_REQUEST, e.getMessage(), request.getDescription(false), LocalDateTime.now());
+        log.warn("BadRequest : " + e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(details);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleGenericException(Exception e, WebRequest request){
+    public ResponseEntity<?> handleGenericException(Exception e, WebRequest request) {
         log.error("Unexpected error : ", e);
-        ErrorDetails details= new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),request.getDescription(false),LocalDateTime.now());
+        ErrorDetails details = new ErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), request.getDescription(false), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(details);
     }
 }

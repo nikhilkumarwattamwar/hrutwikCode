@@ -6,6 +6,8 @@ import java.util.UUID;
 
 public interface PersonalDetailsService {
     PersonalDto saveDetailsById(PersonalDto dto, UUID applicantID);
+
     public PersonalDto getDetailsByID(UUID id);
-    PersonalDto updateDetails(PersonalDto dto,UUID id);
+
+    PersonalDto updateDetails(PersonalDto dto, UUID id);
 }

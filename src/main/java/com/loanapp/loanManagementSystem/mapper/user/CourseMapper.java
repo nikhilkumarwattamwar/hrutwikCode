@@ -12,6 +12,6 @@ public interface CourseMapper {
 
     CourseDto toDto(CourseDetails details);
 
-    void updateFromDtoToEntity(CourseDto dto,@MappingTarget CourseDetails details);
+    void updateFromDtoToEntity(CourseDto dto, @MappingTarget CourseDetails details);
 
 }

@@ -7,7 +7,10 @@ import java.util.UUID;
 
 public interface CourseService {
     CourseDto saveCourseDetails(UUID userId, CourseDto dto);
+
     CourseDto getCourseById(UUID userId);
+
     List<CourseDto> getAllCourse();
-    CourseDto updateCourseDetails(UUID userId,CourseDto dto);
+
+    CourseDto updateCourseDetails(UUID userId, CourseDto dto);
 }

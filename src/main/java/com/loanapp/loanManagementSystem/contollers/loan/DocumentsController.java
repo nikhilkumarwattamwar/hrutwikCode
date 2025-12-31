@@ -15,17 +15,17 @@ import java.util.UUID;
 @RequestMapping("/loan/{loanId}/documets/")
 public class DocumentsController {
 
-    private  static final Logger log=LoggerFactory.getLogger(DocumentsController.class);
+    private static final Logger log = LoggerFactory.getLogger(DocumentsController.class);
     @Autowired
     DocumentsService service;
 
     @PostMapping("/upload")
     public DocumentsDto uploadDocumet(@RequestParam DocumentType documentType,
                                       @RequestParam MultipartFile file,
-                                      @PathVariable UUID loanId){
+                                      @PathVariable UUID loanId) {
 
         log.info("Uploading document for loanId {}", loanId);
-        return service.uploadDocument(loanId,documentType,file);
+        return service.uploadDocument(loanId, documentType, file);
     }
 
     @GetMapping("/{documentId}")

@@ -19,7 +19,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class  CourseControllerTest {
+public class CourseControllerTest {
 
     @InjectMocks
     CourseDetailController controller;
@@ -34,44 +34,44 @@ public class  CourseControllerTest {
     CourseDto dto;
 
     @BeforeEach
-    void setUp(){
-        userId= UUID.randomUUID();
-        dto= new CourseDto();
+    void setUp() {
+        userId = UUID.randomUUID();
+        dto = new CourseDto();
     }
 
     @Test
     @DisplayName("addCourseDetails : Adding course details for the existing user")
-    void testAddCourseDetails(){
+    void testAddCourseDetails() {
 
-        when(service.saveCourseDetails(userId,dto)).thenReturn(dto);
+        when(service.saveCourseDetails(userId, dto)).thenReturn(dto);
 
-        CourseDto result=controller.addCourseDetails(dto,userId);
+        CourseDto result = controller.addCourseDetails(dto, userId);
 
-        assertEquals(result,dto);
-        verify(service,times(1)).saveCourseDetails(userId,dto);
+        assertEquals(result, dto);
+        verify(service, times(1)).saveCourseDetails(userId, dto);
 
     }
 
     @Test
     @DisplayName("GetCourseDetailById : fetching course details using user id")
-    void testGetCourseDetailById(){
+    void testGetCourseDetailById() {
         when(service.getCourseById(userId)).thenReturn(dto);
 
-        CourseDto result=controller.getCourseDetailById(userId);
+        CourseDto result = controller.getCourseDetailById(userId);
 
-        assertEquals(result,dto);
-        verify(service,times(1)).getCourseById(userId);
+        assertEquals(result, dto);
+        verify(service, times(1)).getCourseById(userId);
     }
 
     @Test
     @DisplayName("updateCourseDetail : updating course detail for existing user")
-    void testUpdateCourseDetails(){
-        when(service.updateCourseDetails(userId,dto)).thenReturn(dto);
+    void testUpdateCourseDetails() {
+        when(service.updateCourseDetails(userId, dto)).thenReturn(dto);
 
-        CourseDto result=controller.updateCourseDetail(dto,userId);
+        CourseDto result = controller.updateCourseDetail(dto, userId);
 
         assertNotNull(result);
-        verify(service,times(1)).updateCourseDetails(userId,dto);
+        verify(service, times(1)).updateCourseDetails(userId, dto);
     }
 
 }

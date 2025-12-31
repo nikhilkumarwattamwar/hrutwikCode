@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @DiscriminatorValue("HOME")
-public class HomeLoan extends  Loan {
+public class HomeLoan extends Loan {
 
     private String propertyAddress;
     private Double propertyValue;

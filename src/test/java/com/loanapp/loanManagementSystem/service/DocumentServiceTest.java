@@ -77,7 +77,7 @@ public class DocumentServiceTest {
 
     @Test
     @DisplayName("Throw exception if loanId is not found")
-    void testLoanIdNotFound(){
+    void testLoanIdNotFound() {
         UUID loanId = UUID.randomUUID();
         MultipartFile file = mock(MultipartFile.class);
 
@@ -94,15 +94,15 @@ public class DocumentServiceTest {
     @Test
     @DisplayName("Throw exception when failed to store a file")
     void testFailedToStoreFile() throws IOException {
-        UUID id=UUID.randomUUID();
-        Loan loan=mock(Loan.class);
+        UUID id = UUID.randomUUID();
+        Loan loan = mock(Loan.class);
         MultipartFile file = mock(MultipartFile.class);
 
         when(loanRepository.findByLoanIdAndIsActiveTrue(id)).thenReturn(Optional.ofNullable(loan));
 
-        when(file.getBytes()).thenThrow( new IOException("File error"));
+        when(file.getBytes()).thenThrow(new IOException("File error"));
 
-        RuntimeException exception=assertThrows(RuntimeException.class,()->documentsService.uploadDocument(id,DocumentType.PAN,file));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> documentsService.uploadDocument(id, DocumentType.PAN, file));
         assertEquals("failed to store a document", exception.getMessage());
     }
 

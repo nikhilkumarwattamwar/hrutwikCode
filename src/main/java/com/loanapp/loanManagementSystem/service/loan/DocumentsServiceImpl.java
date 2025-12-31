@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class DocumentsServiceImpl implements DocumentsService{
+public class DocumentsServiceImpl implements DocumentsService {
 
     @Autowired
     private LoanRepository loanRepository;
@@ -26,41 +26,41 @@ public class DocumentsServiceImpl implements DocumentsService{
 
     @Override
     public DocumentsDto uploadDocument(UUID loanId, DocumentType documentType, MultipartFile file) {
-        Loan loan=loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(()->{
-            return  new ResourceNotFoundException("Loan not found");
+        Loan loan = loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(() -> {
+            return new ResourceNotFoundException("Loan not found");
         });
 
         try {
-            Documents documents= new Documents();
+            Documents documents = new Documents();
             documents.setLoan(loan);
             documents.setDocumentType(documentType);
             documents.setContentType(file.getContentType());
             documents.setFileName(file.getOriginalFilename());
             documents.setData(file.getBytes());
 
-            Documents saved=documentsRepository.save(documents);
+            Documents saved = documentsRepository.save(documents);
             return new DocumentsDto(saved.getDocumentId(), saved.getDocumentType(), saved.getFileName(), saved.getContentType());
-        }catch (Exception e){
-               throw  new RuntimeException("failed to store a document");
+        } catch (Exception e) {
+            throw new RuntimeException("failed to store a document");
         }
     }
 
     @Override
     public byte[] downloadDocument(Integer documentId) {
-        Documents documents=documentsRepository.findById(documentId).orElseThrow(()->new ResourceNotFoundException("documet not found"));
+        Documents documents = documentsRepository.findById(documentId).orElseThrow(() -> new ResourceNotFoundException("documet not found"));
 
         return documents.getData();
     }
 
     @Override
     public String softDeleteDocument(Integer documentId) {
-        Documents documents=documentsRepository.findById(documentId).orElseThrow(()->new ResourceNotFoundException("documet not found"));
+        Documents documents = documentsRepository.findById(documentId).orElseThrow(() -> new ResourceNotFoundException("documet not found"));
 
         documents.setActive(false);
 
         documentsRepository.save(documents);
 
-        return  "Documents deleted successfully ";
+        return "Documents deleted successfully ";
 
 
     }

@@ -1,6 +1,8 @@
 package com.loanapp.loanManagementSystem.service;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 import com.loanapp.loanManagementSystem.dto.user.AddressDto;
 import com.loanapp.loanManagementSystem.entities.user.*;
 import com.loanapp.loanManagementSystem.enums.AddressType;
@@ -37,8 +39,8 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("Adding user details")
-    void testCreateUser(){
-        UserDto dto= new UserDto();
+    void testCreateUser() {
+        UserDto dto = new UserDto();
         dto.setEmail("abcd@gmail.com");
         dto.setMobileNumber("1234567890");
 
@@ -48,7 +50,7 @@ public class UserServiceTest {
         residence.setType(AddressType.RESIDENCE);
         dto.setAddressList(List.of(permanent, residence));
 
-        User user= new User();
+        User user = new User();
 
         when(addressMapper.toEntity(any())).thenReturn(new Address());
         when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
@@ -57,12 +59,12 @@ public class UserServiceTest {
         when(mapper.toEntity(dto)).thenReturn(user);
         when(userRepository.save(user)).thenReturn(user);
 
-        UserDto result=userService.createUser(dto);
+        UserDto result = userService.addUserDetails(UUID.randomUUID(),dto);
 
         assertNotNull(result);
         assertEquals("abcd@gmail.com", result.getEmail());
 
-        verify(userRepository,times(1)).save(user);
+        verify(userRepository, times(1)).save(user);
     }
 
     @Test
@@ -82,43 +84,43 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("Fetching user details using user id")
-    void testGetUserById(){
-        UUID id=UUID.randomUUID();
-        User user= new User();
-        UserDto dto= new UserDto();
+    void testGetUserById() {
+        UUID id = UUID.randomUUID();
+        User user = new User();
+        UserDto dto = new UserDto();
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
         when(mapper.toDto(user)).thenReturn(dto);
 
-        UserDto dto1=userService.getUserById(id);
+        UserDto dto1 = userService.getUserById(id);
 
         assertNotNull(dto1);
     }
 
     @Test
     @DisplayName("Updating user details when address is null")
-    void testUpdateUser(){
-        UUID id=UUID.randomUUID();
-        UserDto dto= new UserDto();
+    void testUpdateUser() {
+        UUID id = UUID.randomUUID();
+        UserDto dto = new UserDto();
         dto.setEmail("new@gmail.com");
 
-        User user= new User();
+        User user = new User();
         user.setEmail("old@gamil.com");
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
         when(userRepository.save(user)).thenReturn(user);
         when(mapper.toDto(any(User.class))).thenReturn(dto);
 
-        UserDto result=userService.updateUser(dto,id);
+        UserDto result = userService.updateUser(dto, id);
 
         assertNotNull(result);
 
-        assertEquals("new@gmail.com",result.getEmail());
+        assertEquals("new@gmail.com", result.getEmail());
     }
 
     @Test
     @DisplayName("Updating user details when address is present")
-    void updateWhileAddressExist(){
+    void updateWhileAddressExist() {
         UUID id = UUID.randomUUID();
 
         AddressDto addressDto = new AddressDto();
@@ -146,10 +148,10 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("Deleting user details")
-    void testSoftDeletingUser(){
-        UUID id=UUID.randomUUID();
+    void testSoftDeletingUser() {
+        UUID id = UUID.randomUUID();
 
-        User  user= new User();
+        User user = new User();
         user.setId(id);
         user.setActive(true);
         user.setAddressList(Arrays.asList(new Address()));
@@ -168,37 +170,37 @@ public class UserServiceTest {
 
     @Test
     @DisplayName("Throw exception if email already exists")
-    void testEmailExists(){
-        UUID id=UUID.randomUUID();
-        UserDto userDto= mock(UserDto.class);
+    void testEmailExists() {
+        UUID id = UUID.randomUUID();
+        UserDto userDto = mock(UserDto.class);
         userDto.setEmail("xyz@gmail.com");
         when(userRepository.findByEmail(userDto.getEmail())).thenReturn(Optional.of(new User()));
 
-        BadRequestException exception=assertThrows(BadRequestException.class,()->userService.createUser(userDto));
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.addUserDetails(UUID.randomUUID(),userDto));
 
-        assertEquals("Email already exists.",exception.getMessage());
+        assertEquals("Email already exists.", exception.getMessage());
     }
 
     @Test
     @DisplayName("Throw exception if mobile number already exists")
-    void testMobileNumberExists(){
-        UUID id=UUID.randomUUID();
-        UserDto userDto= mock(UserDto.class);
+    void testMobileNumberExists() {
+        UUID id = UUID.randomUUID();
+        UserDto userDto = mock(UserDto.class);
         userDto.setMobileNumber("1234567890");
         when(userRepository.findByMobileNumber(userDto.getMobileNumber())).thenReturn(Optional.of(new User()));
 
-        BadRequestException exception=assertThrows(BadRequestException.class,()->userService.createUser(userDto));
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.addUserDetails(UUID.randomUUID(),userDto));
 
-        assertEquals("Mobile Number already exists.",exception.getMessage());
+        assertEquals("Mobile Number already exists.", exception.getMessage());
     }
 
     @Test
     @DisplayName("throw exception if both address types are not present")
-    void testAddressTypeMissing(){
-        AddressDto addressDto=new AddressDto();
+    void testAddressTypeMissing() {
+        AddressDto addressDto = new AddressDto();
         addressDto.setType(AddressType.PERMANENT);
 
-        UserDto userDto=new UserDto();
+        UserDto userDto = new UserDto();
         userDto.setEmail("xyz@gmail.com");
         userDto.setMobileNumber("1234567890");
         userDto.setAddressList(List.of(addressDto));
@@ -207,39 +209,39 @@ public class UserServiceTest {
 
         when(userRepository.findByMobileNumber(anyString())).thenReturn(Optional.empty());
 
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.createUser(userDto));
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.addUserDetails(UUID.randomUUID(),userDto));
 
         assertEquals("Both Permanent and Residence address are required.", exception.getMessage());
     }
 
     @Test
     @DisplayName("User id not found while fetching the user details")
-    void testUserIdNotFound(){
-        UUID id=UUID.randomUUID();
+    void testUserIdNotFound() {
+        UUID id = UUID.randomUUID();
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
-        ResourceNotFoundException exception=assertThrows(ResourceNotFoundException.class,() -> userService.getUserById(id));
-        assertEquals("User ID not found",exception.getMessage());
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> userService.getUserById(id));
+        assertEquals("User ID not found", exception.getMessage());
     }
 
     @Test
     @DisplayName("User id not found while updating the user details")
-    void testUpdate_UserIdNotFound(){
-        UUID id=UUID.randomUUID();
+    void testUpdate_UserIdNotFound() {
+        UUID id = UUID.randomUUID();
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
-        ResourceNotFoundException exception=assertThrows(ResourceNotFoundException.class,() -> userService.updateUser(new UserDto(),id));
-        assertEquals("User not found",exception.getMessage());
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> userService.updateUser(new UserDto(), id));
+        assertEquals("User not found", exception.getMessage());
     }
 
     @Test
     @DisplayName("User id not found while deleting the details")
-    void testDelete_UserIdNotFound(){
-        UUID id=UUID.randomUUID();
+    void testDelete_UserIdNotFound() {
+        UUID id = UUID.randomUUID();
         when(userRepository.findByIdAndIsActiveTrue(id)).thenReturn(Optional.empty());
 
-        ResourceNotFoundException exception=assertThrows(ResourceNotFoundException.class,() -> userService.softDeleteUser(id));
-        assertEquals("User ID not found",exception.getMessage());
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> userService.softDeleteUser(id));
+        assertEquals("User ID not found", exception.getMessage());
     }
 
 }

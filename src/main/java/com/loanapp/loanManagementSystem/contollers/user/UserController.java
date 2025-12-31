@@ -1,5 +1,7 @@
 package com.loanapp.loanManagementSystem.contollers.user;
 
+import com.loanapp.loanManagementSystem.dto.loan.LoginRequestDto;
+import com.loanapp.loanManagementSystem.dto.loan.LoginResponseDto;
 import com.loanapp.loanManagementSystem.dto.user.UserDto;
 import com.loanapp.loanManagementSystem.service.user.UserService;
 import jakarta.validation.Valid;
@@ -21,11 +23,26 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping
-    public UserDto addUser(@RequestBody @Valid UserDto userDto){
-        log.info("Adding user with email :{} "+userDto.getEmail());
-        return userService.createUser(userDto);
+    @PutMapping("/register")
+    public UserDto register(@RequestBody UserDto dto) {
+        return userService.register(dto);
     }
+
+    @PostMapping("/login")
+    public LoginResponseDto login(@RequestBody LoginRequestDto dto) {
+        return userService.login(dto);
+    }
+
+    @PutMapping("/profile/{userId}")
+    public UserDto addUserdetails(@PathVariable UUID userId, @RequestBody UserDto dto) {
+        return userService.addUserDetails(userId, dto);
+    }
+
+//    @PostMapping
+//    public UserDto addUser(@RequestBody @Valid UserDto userDto){
+//        log.info("Adding user with email :{} "+userDto.getEmail());
+//        return userService.register(userDto);
+//    }
 
 
     @GetMapping("/all")

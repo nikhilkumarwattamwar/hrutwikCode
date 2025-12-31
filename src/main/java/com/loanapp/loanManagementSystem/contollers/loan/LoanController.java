@@ -14,7 +14,7 @@ import java.util.UUID;
 @RestController
 public class LoanController {
 
-    private static final Logger log=LoggerFactory.getLogger(LoanController.class);
+    private static final Logger log = LoggerFactory.getLogger(LoanController.class);
 
     @Autowired
     LoanService service;

@@ -27,7 +27,7 @@ public class PersonalDetailsServiceImpl implements PersonalDetailsService {
     @Autowired
     UserRepository userRepository;
 
-    public PersonalDto saveDetailsById(PersonalDto dto,UUID id){
+    public PersonalDto saveDetailsById(PersonalDto dto, UUID id) {
 
         log.info("Saving personal details for user ID: {}", id);
 
@@ -36,41 +36,41 @@ public class PersonalDetailsServiceImpl implements PersonalDetailsService {
                     log.error("User not found with ID: {}", id);
                     return new RuntimeException("ID does not exist");
                 });
-        PersonalDetails details=mapper.toEntity(dto);
+        PersonalDetails details = mapper.toEntity(dto);
         user.setPersonalDetails(details);
 
         details.setUser(user);
 
-        PersonalDetails saved= personalDetailsRepository.save(details);
+        PersonalDetails saved = personalDetailsRepository.save(details);
 
         log.info("Personal details saved successfully for user ID: {}", id);
         return mapper.toPersonaldto(saved);
 
     }
 
-    public PersonalDto getDetailsByID(UUID id){
+    public PersonalDto getDetailsByID(UUID id) {
         log.info("Fetching personal details for user ID: {}", id);
 
         PersonalDetails details = personalDetailsRepository.findByUserId(id).orElseThrow(() -> {
-                    log.error("Personal details not found for user ID: {}", id);
-                    return new RuntimeException("ID does not exists");
-                });
+            log.error("Personal details not found for user ID: {}", id);
+            return new RuntimeException("ID does not exists");
+        });
 
         return mapper.toPersonaldto(details);
     }
 
-    public PersonalDto updateDetails(PersonalDto dto,UUID id){
+    public PersonalDto updateDetails(PersonalDto dto, UUID id) {
 
         log.info("Updating personal details for user ID: {}", id);
 
         PersonalDetails existingDetails = personalDetailsRepository.findByUserId(id).orElseThrow(() -> {
-                    log.error("Update failed. Personal details not found for user ID: {}", id);
-                    return new RuntimeException("User Id not found");
-                });
+            log.error("Update failed. Personal details not found for user ID: {}", id);
+            return new RuntimeException("User Id not found");
+        });
 
-        mapper.updateEntityFromDto(dto,existingDetails);
+        mapper.updateEntityFromDto(dto, existingDetails);
 
-        PersonalDetails updated=personalDetailsRepository.save(existingDetails);
+        PersonalDetails updated = personalDetailsRepository.save(existingDetails);
 
         log.info("Personal details updated successfully for user ID: {}", id);
 
@@ -78,7 +78,6 @@ public class PersonalDetailsServiceImpl implements PersonalDetailsService {
         return mapper.toPersonaldto(updated);
 
     }
-
 
 
 }

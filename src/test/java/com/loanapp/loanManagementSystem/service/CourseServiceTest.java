@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -35,30 +36,30 @@ public class CourseServiceTest {
     @Mock
     UserRepository userRepository;
 
-   public CourseDto courseDto;
+    public CourseDto courseDto;
     CourseDetails detailsEntity;
     User user;
     UUID userID;
 
     @BeforeEach
-    void setUp(){
-         userID= UUID.randomUUID();
-        courseDto= new CourseDto();
-        detailsEntity= new CourseDetails();
-        user= new User();
+    void setUp() {
+        userID = UUID.randomUUID();
+        courseDto = new CourseDto();
+        detailsEntity = new CourseDetails();
+        user = new User();
     }
 
 
     @Test
     @DisplayName("saveCourseDetails :")
-    void testsaveCourseDetails(){
+    void testsaveCourseDetails() {
 
         when(userRepository.findById(userID)).thenReturn(Optional.ofNullable(user));
         when(mapper.toEntity(courseDto)).thenReturn(detailsEntity);
         when(courseRepository.save(detailsEntity)).thenReturn(detailsEntity);
         when(mapper.toDto(detailsEntity)).thenReturn(courseDto);
 
-        CourseDto result=courseService.saveCourseDetails(userID,courseDto);
+        CourseDto result = courseService.saveCourseDetails(userID, courseDto);
 
         assertNotNull(result);
         verify(userRepository).findById(userID);
@@ -68,22 +69,22 @@ public class CourseServiceTest {
 
     @Test
     @DisplayName("Throw exception when user id not found while fetching course details")
-    void testGet_UserIdNotFound(){
-        UUID random= UUID.randomUUID();
+    void testGet_UserIdNotFound() {
+        UUID random = UUID.randomUUID();
         when(courseRepository.findByUserId(random)).thenReturn(Optional.empty());
 
-        RuntimeException exception=assertThrows(RuntimeException.class,()->courseService.getCourseById(random));
-        assertEquals("User not found",exception.getMessage());
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> courseService.getCourseById(random));
+        assertEquals("User not found", exception.getMessage());
     }
 
     @Test
     @DisplayName("getCourseById : Fetch course details by user ID")
-    void testGetCourseById(){
+    void testGetCourseById() {
 
         when(courseRepository.findByUserId(userID)).thenReturn(Optional.ofNullable(detailsEntity));
         when(mapper.toDto(detailsEntity)).thenReturn(courseDto);
 
-        CourseDto result=courseService.getCourseById(userID);
+        CourseDto result = courseService.getCourseById(userID);
 
         assertNotNull(result);
         verify(courseRepository).findByUserId(userID);
@@ -92,54 +93,53 @@ public class CourseServiceTest {
 
     @Test
     @DisplayName("updateCourseDetails : updating course details for existing user")
-    void testUpdateCourseDetails(){
+    void testUpdateCourseDetails() {
 
         when(courseRepository.findByUserId(userID)).thenReturn(Optional.ofNullable(detailsEntity));
         when(courseRepository.save(detailsEntity)).thenReturn(detailsEntity);
         when(mapper.toDto(detailsEntity)).thenReturn(courseDto);
 
-        CourseDto result=courseService.updateCourseDetails(userID,courseDto);
+        CourseDto result = courseService.updateCourseDetails(userID, courseDto);
 
         assertNotNull(result);
         verify(courseRepository).findByUserId(userID);
     }
 
 
-@Test
-@DisplayName("Throw exception when user id not found")
-    void testSave_UserNotFound(){
-    UUID random= UUID.randomUUID();
-    when(userRepository.findById(random)).thenReturn(Optional.empty());
+    @Test
+    @DisplayName("Throw exception when user id not found")
+    void testSave_UserNotFound() {
+        UUID random = UUID.randomUUID();
+        when(userRepository.findById(random)).thenReturn(Optional.empty());
 
-    RuntimeException exception=assertThrows(RuntimeException.class,()->courseService.saveCourseDetails(random,new CourseDto()));
-    assertEquals("User ID does not exist",exception.getMessage());
-}
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> courseService.saveCourseDetails(random, new CourseDto()));
+        assertEquals("User ID does not exist", exception.getMessage());
+    }
 
-@Test
+    @Test
     @DisplayName("Get all course details for existing user")
-    void testGetallCourseDetails(){
-        CourseDetails details=mock(CourseDetails.class);
-        CourseDto dto=mock(CourseDto.class);
+    void testGetallCourseDetails() {
+        CourseDetails details = mock(CourseDetails.class);
+        CourseDto dto = mock(CourseDto.class);
 
         when(courseRepository.findAll()).thenReturn(List.of(details));
         when(mapper.toDto(details)).thenReturn(dto);
 
-        List<CourseDto> result=courseService.getAllCourse();
+        List<CourseDto> result = courseService.getAllCourse();
 
         assertNotNull(result);
-        assertEquals(1,result.size());
+        assertEquals(1, result.size());
 
-}
+    }
 
-@Test
+    @Test
     @DisplayName("Throw exception when user id not found while updating ")
+    void testUpdate_UserIdNotFound() {
+        UUID random = UUID.randomUUID();
+        when(courseRepository.findByUserId(random)).thenReturn(Optional.empty());
 
-    void testUpdate_UserIdNotFound(){
-    UUID random= UUID.randomUUID();
-    when(courseRepository.findByUserId(random)).thenReturn(Optional.empty());
-
-    RuntimeException exception=assertThrows(RuntimeException.class,()->courseService.updateCourseDetails(random,new CourseDto()));
-    assertEquals("Course details not found",exception.getMessage());
-}
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> courseService.updateCourseDetails(random, new CourseDto()));
+        assertEquals("Course details not found", exception.getMessage());
+    }
 
 }

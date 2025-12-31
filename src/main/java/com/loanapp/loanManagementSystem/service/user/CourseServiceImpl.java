@@ -33,9 +33,9 @@ public class CourseServiceImpl implements CourseService {
         log.info("Saving course details for userId: {}", userId);
 
         User user = userRepository.findById(userId).orElseThrow(() -> {
-                    log.error("User not found with userId: {}", userId);
-                    return new RuntimeException("User ID does not exist");
-                });
+            log.error("User not found with userId: {}", userId);
+            return new RuntimeException("User ID does not exist");
+        });
 
 
         CourseDetails details = mapper.toEntity(dto);
@@ -51,39 +51,39 @@ public class CourseServiceImpl implements CourseService {
         return mapper.toDto(saved);
     }
 
-    public CourseDto getCourseById(UUID userId){
+    public CourseDto getCourseById(UUID userId) {
 
 
         log.info("Fetching course details for userId: {}", userId);
 
         CourseDetails details = courseRepository.findByUserId(userId).orElseThrow(() -> {
-                    log.error("Course details not found for userId: {}", userId);
-                    return new RuntimeException("User not found");
-                });
+            log.error("Course details not found for userId: {}", userId);
+            return new RuntimeException("User not found");
+        });
 
         return mapper.toDto(details);
     }
 
-    public List<CourseDto> getAllCourse(){
+    public List<CourseDto> getAllCourse() {
 
         log.info("Fetching all course details");
 
-        List<CourseDetails> details=courseRepository.findAll();
+        List<CourseDetails> details = courseRepository.findAll();
 
         return details.stream().map(mapper::toDto).toList();
     }
 
-    public CourseDto updateCourseDetails(UUID userId,CourseDto dto){
+    public CourseDto updateCourseDetails(UUID userId, CourseDto dto) {
 
         log.info("Updating course details for userId: {}", userId);
 
         CourseDetails existingDetails = courseRepository.findByUserId(userId).orElseThrow(() -> {
-                    log.error("Course details not found with userId: {}", userId);
-                    return new RuntimeException("Course details not found");
-                });
-        mapper.updateFromDtoToEntity(dto,existingDetails);
+            log.error("Course details not found with userId: {}", userId);
+            return new RuntimeException("Course details not found");
+        });
+        mapper.updateFromDtoToEntity(dto, existingDetails);
 
-        CourseDetails updatedDetails=courseRepository.save(existingDetails);
+        CourseDetails updatedDetails = courseRepository.save(existingDetails);
 
         log.info("Course details updated successfully for userId: {}", userId);
 
@@ -91,7 +91,6 @@ public class CourseServiceImpl implements CourseService {
         return mapper.toDto(updatedDetails);
 
     }
-
 
 
 }

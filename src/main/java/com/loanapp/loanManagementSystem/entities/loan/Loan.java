@@ -1,4 +1,5 @@
 package com.loanapp.loanManagementSystem.entities.loan;
+
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 
@@ -21,10 +22,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "loanCategory", discriminatorType = DiscriminatorType.STRING)
-public  class Loan {
+public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-   private UUID loanId;
+    private UUID loanId;
 
     @Column(name = "loanType")
     @Enumerated(EnumType.STRING)
@@ -42,11 +43,11 @@ public  class Loan {
 
     String rejectionReason;
 
-    @Column(name = "isActive" ,nullable = false)
-    private boolean isActive=true;
+    @Column(name = "isActive", nullable = false)
+    private boolean isActive = true;
 
     @ManyToOne
-    @JoinColumn(name = "userId" ,nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     User user;
 
     @OneToMany(mappedBy = "loan")

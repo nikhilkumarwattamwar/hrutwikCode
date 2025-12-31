@@ -1,12 +1,17 @@
 package com.loanapp.loanManagementSystem.service.user;
 
+import com.loanapp.loanManagementSystem.dto.loan.LoginRequestDto;
+import com.loanapp.loanManagementSystem.dto.loan.LoginResponseDto;
 import com.loanapp.loanManagementSystem.dto.user.AddressDto;
 import com.loanapp.loanManagementSystem.dto.user.UserDto;
 import com.loanapp.loanManagementSystem.entities.user.Address;
 import com.loanapp.loanManagementSystem.entities.user.EducationDetails;
 import com.loanapp.loanManagementSystem.enums.AddressType;
+import com.loanapp.loanManagementSystem.enums.Role;
 import com.loanapp.loanManagementSystem.exception.BadRequestException;
 import com.loanapp.loanManagementSystem.exception.ResourceNotFoundException;
+import com.loanapp.loanManagementSystem.integrate.FinClient;
+import com.loanapp.loanManagementSystem.integrate.OktaClient;
 import com.loanapp.loanManagementSystem.mapper.user.AddressMapper;
 import com.loanapp.loanManagementSystem.mapper.user.UserMapper;
 import com.loanapp.loanManagementSystem.entities.user.User;
@@ -15,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,43 +39,92 @@ public class UserServiceImpl implements UserService {
     @Autowired
     AddressMapper addressMapper;
 
+    @Autowired
+    FinClient finClient;
+
+    @Autowired
+    OktaClient oktaClient;
+
+    @Transactional
     @Override
-    public UserDto createUser(UserDto dto){
-        log.info("Creating user with email: {}", dto.getEmail());
+    public UserDto register(UserDto dto) {
 
-        if(userRepository.findByEmail(dto.getEmail()).isPresent()){
-            log.warn("User creation failed. Email already exists : {}", dto.getEmail());
-            throw new BadRequestException("Email already exists.");
+        String password = dto.getPassword() != null ? dto.getPassword() : "UserPass@123";
+        String role = dto.getRole() != null ? dto.getRole().name() : "USER";
+        String authProvider = "FIN";
+
+        if ("OKTA".equalsIgnoreCase(authProvider)) {
+            oktaClient.register(dto, password, role);
+        } else {
+            FinClient.AuthRequest request = new FinClient.AuthRequest();
+            request.setName(dto.getName());
+            request.setEmail(dto.getEmail());
+            request.setPassword(password);
+            request.setRole(role);
+            finClient.register(request).block();
         }
 
-        if(userRepository.findByMobileNumber(dto.getMobileNumber()).isPresent()){
-            log.warn("User creation failed. Mobile number already exists : {}", dto.getMobileNumber());
-            throw  new BadRequestException("Mobile Number already exists.");
+        User user = new User();
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setActive(true);
+
+        User saved = userRepository.save(user);
+        return mapper.toDto(saved);
+    }
+
+    @Override
+    public LoginResponseDto login(LoginRequestDto dto) {
+
+        if (dto.getUsername() == null || dto.getPassword() == null) {
+            throw new BadRequestException("Email and password are required");
         }
 
-       Boolean hasPermannent= dto.getAddressList().stream().filter(addressDto -> addressDto.getType()==AddressType.PERMANENT).findAny().isPresent();
-       Boolean hasResidence=dto.getAddressList().stream().filter(addressDto -> addressDto.getType()==AddressType.RESIDENCE).findAny().isPresent();
+        LoginResponseDto response = finClient.login(dto).block();
 
-       if(!hasResidence || !hasPermannent){
-           log.warn("User creation failed. Both PERMANENT and RESIDENCE address required");
-           throw new BadRequestException("Both Permanent and Residence address are required.");
-       }
+        if (response == null || response.getToken() == null) {
+            throw new RuntimeException("Invalid credentials");
+        }
 
-        User user=mapper.toEntity(dto);
+        return response;
+    }
 
-       for(AddressDto addressDto:dto.getAddressList()){
-           Address address=addressMapper.toEntity(addressDto);
-           user.setAddressDetail(address);
-       }
+
+    public UserDto addUserDetails(UUID userId, UserDto dto){
+        User user=userRepository.findById(userId).orElseThrow(()->{
+            return new ResourceNotFoundException("User id not found");
+        });
+
+        user.setCkycNo(dto.getCkycNo());
+        user.setCustomerFetchType(dto.getCustomerFetchType());
+        user.setCustomerType(dto.getCustomerType());
+        user.setFathersName(dto.getFathersName());
+        user.setMothersName(dto.getMothersName());
+        user.setGuardianName(dto.getGuardianName());
+        user.setNationality(dto.getNationality());
+        user.setDateOfBirth(dto.getDateOfBirth());
+
+        Boolean hasPermannent= dto.getAddressList().stream().filter(addressDto -> addressDto.getType()==AddressType.PERMANENT).findAny().isPresent();
+        Boolean hasResidence=dto.getAddressList().stream().filter(addressDto -> addressDto.getType()==AddressType.RESIDENCE).findAny().isPresent();
+
+        if(!hasResidence || !hasPermannent){
+            log.warn("User creation failed. Both PERMANENT and RESIDENCE address required");
+            throw new BadRequestException("Both Permanent and Residence address are required.");
+        }
+
+        for(AddressDto addressDto:dto.getAddressList()){
+            Address address=addressMapper.toEntity(addressDto);
+            user.setAddressDetail(address);
+        }
 
         User saved=userRepository.save(user);
 
-       UserDto savedDto=mapper.toDto(saved);
-
-        log.info("User created successfully with ID: {}", saved.getId());
+        UserDto savedDto=mapper.toDto(saved);
 
         return savedDto;
+
     }
+
 
     @Override
     public List<UserDto> getAllUsers(){

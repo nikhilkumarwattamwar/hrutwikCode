@@ -31,22 +31,22 @@ public class EducationDetailsControllerTest {
     List<EducationDto> dtoList;
 
     @BeforeEach
-     void setUp(){
+    void setUp() {
         userID = UUID.randomUUID();
-        dto= new EducationDto();
-        dtoList= Arrays.asList(dto);
+        dto = new EducationDto();
+        dtoList = Arrays.asList(dto);
 
     }
 
     @Test
     @DisplayName("Add education details for valid user ID")
-    void testAddEducationDetails(){
-        when(service.saveEducationDetail(dtoList,userID)).thenReturn(dtoList);
+    void testAddEducationDetails() {
+        when(service.saveEducationDetail(dtoList, userID)).thenReturn(dtoList);
 
-        List<EducationDto> result=controller.addEducationDetails(dtoList,userID);
+        List<EducationDto> result = controller.addEducationDetails(dtoList, userID);
 
-        assertEquals(result,dtoList);
-        verify(service,times(1)).saveEducationDetail(dtoList,userID);
+        assertEquals(result, dtoList);
+        verify(service, times(1)).saveEducationDetail(dtoList, userID);
     }
 
     @Test
@@ -72,9 +72,6 @@ public class EducationDetailsControllerTest {
         assertEquals(dtoList, result);
         verify(service, times(1)).updateEducationDetail(dtoList, userID);
     }
-
-
-
 
 
 }

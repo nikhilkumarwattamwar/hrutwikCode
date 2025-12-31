@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Optional;
@@ -36,19 +37,19 @@ public class PersonalDetailsServiceTest {
 
     @Test
     @DisplayName("saveDetailsById : should save personal details for existing user ")
-    void testSaveDetailsById(){
-        UUID id= UUID.randomUUID();
+    void testSaveDetailsById() {
+        UUID id = UUID.randomUUID();
 
-        PersonalDto personalDto= new PersonalDto();
-        User user= new User();
-        PersonalDetails details= new PersonalDetails();
+        PersonalDto personalDto = new PersonalDto();
+        User user = new User();
+        PersonalDetails details = new PersonalDetails();
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
         when(mapper.toEntity(personalDto)).thenReturn(details);
         when(detailsRepository.save(details)).thenReturn(details);
         when(mapper.toPersonaldto(details)).thenReturn(personalDto);
 
-        PersonalDto result=personalDetailsService.saveDetailsById(personalDto,id);
+        PersonalDto result = personalDetailsService.saveDetailsById(personalDto, id);
 
         assertNotNull(result);
         verify(userRepository).findById(id);
@@ -58,34 +59,34 @@ public class PersonalDetailsServiceTest {
 
     @Test
     @DisplayName("getDetailsByID: should fetch personal details of user using id ")
-    void testGetDetailsById(){
-        UUID id= UUID.randomUUID();
+    void testGetDetailsById() {
+        UUID id = UUID.randomUUID();
 
         PersonalDetails details = new PersonalDetails();
-        PersonalDto dto= new PersonalDto();
+        PersonalDto dto = new PersonalDto();
 
         when(detailsRepository.findByUserId(id)).thenReturn(Optional.of(details));
         when(mapper.toPersonaldto(details)).thenReturn(dto);
 
-        PersonalDto result=personalDetailsService.getDetailsByID(id);
+        PersonalDto result = personalDetailsService.getDetailsByID(id);
 
-        assertNotNull( result);
+        assertNotNull(result);
         verify(detailsRepository).findByUserId(id);
 
     }
 
     @Test
     @DisplayName("updateDetails : should update details of existing user")
-    void testUpdateDetails(){
-        UUID id= UUID.randomUUID();
-        PersonalDetails details= new PersonalDetails();
-        PersonalDto dto= new PersonalDto();
+    void testUpdateDetails() {
+        UUID id = UUID.randomUUID();
+        PersonalDetails details = new PersonalDetails();
+        PersonalDto dto = new PersonalDto();
 
         when(detailsRepository.findByUserId(id)).thenReturn(Optional.of(details));
         when(detailsRepository.save(details)).thenReturn(details);
         when(mapper.toPersonaldto(details)).thenReturn(dto);
 
-        PersonalDto result=personalDetailsService.updateDetails(dto,id);
+        PersonalDto result = personalDetailsService.updateDetails(dto, id);
 
         verify(detailsRepository).findByUserId(id);
         verify(detailsRepository).save(details);
@@ -94,38 +95,38 @@ public class PersonalDetailsServiceTest {
 
     @Test
     @DisplayName("Throw exception when user id is not found")
-    void testUserIdNotFound(){
-        UUID id=UUID.randomUUID();
+    void testUserIdNotFound() {
+        UUID id = UUID.randomUUID();
 
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
-        RuntimeException exception=assertThrows(RuntimeException.class,()->personalDetailsService.saveDetailsById(new PersonalDto(),id));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> personalDetailsService.saveDetailsById(new PersonalDto(), id));
 
-        assertEquals("ID does not exist",exception.getMessage());
+        assertEquals("ID does not exist", exception.getMessage());
     }
 
     @Test
     @DisplayName("Throw exception when user id not found while fetching personal details")
-    void testGet_UserIdNotFound(){
-        UUID id=UUID.randomUUID();
+    void testGet_UserIdNotFound() {
+        UUID id = UUID.randomUUID();
 
         when(detailsRepository.findByUserId(id)).thenReturn(Optional.empty());
 
-        RuntimeException exception=assertThrows(RuntimeException.class,()->personalDetailsService.getDetailsByID(id));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> personalDetailsService.getDetailsByID(id));
 
-        assertEquals("ID does not exists",exception.getMessage());
+        assertEquals("ID does not exists", exception.getMessage());
     }
 
     @Test
     @DisplayName("Throw exception when user id not found while updating personal details")
-    void testUpdate_UserIdNotFound(){
-        UUID id=UUID.randomUUID();
+    void testUpdate_UserIdNotFound() {
+        UUID id = UUID.randomUUID();
 
         when(detailsRepository.findByUserId(id)).thenReturn(Optional.empty());
 
-        RuntimeException exception=assertThrows(RuntimeException.class,()->personalDetailsService.updateDetails(new PersonalDto(),id));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> personalDetailsService.updateDetails(new PersonalDto(), id));
 
-        assertEquals("User Id not found",exception.getMessage());
+        assertEquals("User Id not found", exception.getMessage());
     }
 
 

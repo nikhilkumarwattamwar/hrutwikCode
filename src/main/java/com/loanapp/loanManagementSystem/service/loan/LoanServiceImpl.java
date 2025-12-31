@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Service
 @Slf4j
-public class LoanServiceImpl implements LoanService{
+public class LoanServiceImpl implements LoanService {
 
     @Autowired
     UserRepository userRepository;
@@ -42,7 +42,7 @@ public class LoanServiceImpl implements LoanService{
     @Override
     public LoanDto createLoan(UUID userId, LoanDto loanDto) {
 
-        User user=userRepository.findById(userId).orElseThrow(()->{
+        User user = userRepository.findById(userId).orElseThrow(() -> {
             return new ResourceNotFoundException("User id not found");
         });
 
@@ -52,7 +52,7 @@ public class LoanServiceImpl implements LoanService{
 
         Loan loan;
 
-        switch (loanDto.getLoanType()){
+        switch (loanDto.getLoanType()) {
             case HOME:
                 if (!(loanDto instanceof HomeLoanDto homeLoanDto)) {
                     throw new RuntimeException("Expected HomeLoanDto for HOME loan");
@@ -66,7 +66,7 @@ public class LoanServiceImpl implements LoanService{
                     throw new RuntimeException("Expected BusinessLoanDto");
                 }
 
-                BusinessLoan businessLoan= businessMapper.toEntity(businessLoanDto);
+                BusinessLoan businessLoan = businessMapper.toEntity(businessLoanDto);
                 loan = businessLoan;
                 break;
 
@@ -74,7 +74,7 @@ public class LoanServiceImpl implements LoanService{
                 if (!(loanDto instanceof PersonalLoanDto personalLoanDto)) {
                     throw new RuntimeException("Expected PersonalLoanDto");
                 }
-                PersonalLoan personalLoan= personalLoanMapper.toEntity(personalLoanDto);
+                PersonalLoan personalLoan = personalLoanMapper.toEntity(personalLoanDto);
                 loan = personalLoan;
                 break;
 
@@ -83,7 +83,7 @@ public class LoanServiceImpl implements LoanService{
                     throw new RuntimeException("Expected EducationLoanDto");
                 }
                 EducationLoan educationLoan = educationLoanMapper.toEntity(educationLoanDto);
-                loan=educationLoan;
+                loan = educationLoan;
                 break;
 
             default:
@@ -92,7 +92,7 @@ public class LoanServiceImpl implements LoanService{
 
 
         loan.setUser(user);
-        Loan saved=loanRepository.save(loan);
+        Loan saved = loanRepository.save(loan);
         return loanMapper.toDto(saved);
     }
 
@@ -105,11 +105,11 @@ public class LoanServiceImpl implements LoanService{
 
     @Override
     public List<LoanDto> getLoansByUserId(UUID userId) {
-        List<Loan> loans=loanRepository.findByUserId(userId).orElseThrow(()->{
+        List<Loan> loans = loanRepository.findByUserId(userId).orElseThrow(() -> {
             return new ResourceNotFoundException("user id not found");
         });
 
-        List<LoanDto> loanDtos=loans.stream().map(loan -> loanMapper.toDto(loan)).toList();
+        List<LoanDto> loanDtos = loans.stream().map(loan -> loanMapper.toDto(loan)).toList();
 
         return loanDtos;
     }
@@ -126,11 +126,11 @@ public class LoanServiceImpl implements LoanService{
 
     @Override
     public LoanDto updateLoan(UUID loanId, LoanDto loanDto) {
-        Loan loan=loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(()->{
+        Loan loan = loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(() -> {
             return new ResourceNotFoundException("loan id not found");
         });
 
-        if(!loan.getLoanType().equals(loanDto.getLoanType())){
+        if (!loan.getLoanType().equals(loanDto.getLoanType())) {
             throw new RuntimeException("Loan type cannot be changed");
         }
 
@@ -138,7 +138,7 @@ public class LoanServiceImpl implements LoanService{
         loan.setInterestRate(loanDto.getInterestRate());
         loan.setTenure(loanDto.getTenure());
 
-        switch (loan.getLoanType()){
+        switch (loan.getLoanType()) {
             case PERSONAL:
                 if (!(loanDto instanceof PersonalLoanDto personalLoanDto)) {
                     throw new RuntimeException("Expected PersonalLoanDto");
@@ -167,7 +167,7 @@ public class LoanServiceImpl implements LoanService{
                 throw new RuntimeException("Unsupported loan type");
         }
 
-       Loan updated= loanRepository.save(loan);
+        Loan updated = loanRepository.save(loan);
         return loanMapper.toDto(updated);
     }
 }

@@ -12,12 +12,12 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "educationDetails", uniqueConstraints =@UniqueConstraint(columnNames ={"userId","examPassed"} ))
+@Table(name = "educationDetails", uniqueConstraints = @UniqueConstraint(columnNames = {"userId", "examPassed"}))
 public class EducationDetails {
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-@Column(name = "educationId")
-Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "educationId")
+    Integer id;
 
 
     @Column(name = "examPassed")

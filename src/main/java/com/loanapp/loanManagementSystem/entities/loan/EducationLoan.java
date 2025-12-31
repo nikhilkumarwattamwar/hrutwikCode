@@ -17,11 +17,11 @@ import lombok.Setter;
 public class EducationLoan extends Loan {
 
     @OneToOne
-     @JoinColumn(name = "courseDetailId" ,nullable = true)
+    @JoinColumn(name = "courseDetailId", nullable = true)
     CourseDetails courseDetails;
 
     @OneToOne
-    @JoinColumn(name = "educationDetailId" , nullable = true)
+    @JoinColumn(name = "educationDetailId", nullable = true)
     EducationDetails educationDetails;
 
     private Double courseFee;

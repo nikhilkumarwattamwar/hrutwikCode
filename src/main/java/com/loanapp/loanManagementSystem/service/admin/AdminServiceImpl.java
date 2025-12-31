@@ -15,9 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+
 @Service
 @Transactional
-public class AdminServiceImpl implements AdminService{
+public class AdminServiceImpl implements AdminService {
     @Autowired
     LoanRepository loanRepository;
 
@@ -30,7 +31,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public List<LoanDto> getAllLoan() {
-        List<Loan> loans=loanRepository.findAll();
+        List<Loan> loans = loanRepository.findAll();
 
         return loans.stream().map(loan -> mapper.toDto(loan)).toList();
 
@@ -47,26 +48,26 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public LoanDto approveLoan(UUID loanId) {
-        Loan existingLoan=loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(()->{
+        Loan existingLoan = loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(() -> {
             return new ResourceNotFoundException("Loan ID not found");
         });
 
         existingLoan.setLoanStaus(LoanStatus.APPROVED);
-        Loan updated=loanRepository.save(existingLoan);
+        Loan updated = loanRepository.save(existingLoan);
         return mapper.toDto(updated);
 
     }
 
     @Override
-    public LoanDto rejectLoan(UUID loanId,String reason) {
-        Loan existingLoan=loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(()->{
+    public LoanDto rejectLoan(UUID loanId, String reason) {
+        Loan existingLoan = loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(() -> {
             return new ResourceNotFoundException("Loan ID not found");
         });
 
         existingLoan.setLoanStaus(LoanStatus.REJECTED);
         existingLoan.setRejectionReason(reason);
 
-        Loan updated=loanRepository.save(existingLoan);
+        Loan updated = loanRepository.save(existingLoan);
         return mapper.toDto(updated);
     }
 

@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -46,14 +47,14 @@ public class AdminServiceTest {
 
     @Test
     @DisplayName("Should get all existing loans")
-    void testGetAllLoan(){
+    void testGetAllLoan() {
         Loan loan = new Loan();
-        LoanDto dto= new LoanDto();
+        LoanDto dto = new LoanDto();
 
         when(loanRepository.findAll()).thenReturn(List.of(loan));
         when(loanMapper.toDto(loan)).thenReturn(dto);
 
-        List<LoanDto> loans=service.getAllLoan();
+        List<LoanDto> loans = service.getAllLoan();
 
 
         assertNotNull(loans);
@@ -63,16 +64,16 @@ public class AdminServiceTest {
 
     @Test
     @DisplayName("Shound get loan details by Loan ID")
-    void testGetLoanByLoanId(){
-        UUID loanID=UUID.randomUUID();
-        Loan loan= new Loan();
+    void testGetLoanByLoanId() {
+        UUID loanID = UUID.randomUUID();
+        Loan loan = new Loan();
         loan.setLoanId(loanID);
         loan.setActive(true);
-        LoanDto dto= new LoanDto();
+        LoanDto dto = new LoanDto();
         when(loanRepository.findByLoanIdAndIsActiveTrue(loanID)).thenReturn(Optional.of(loan));
         when(loanMapper.toDto(loan)).thenReturn(dto);
 
-        LoanDto result=service.getLoanByLoanId(loanID);
+        LoanDto result = service.getLoanByLoanId(loanID);
 
         assertNotNull(result);
         verify(loanRepository).findByLoanIdAndIsActiveTrue(loanID);
@@ -81,34 +82,34 @@ public class AdminServiceTest {
 
     @Test
     @DisplayName("Loan id not found")
-    void testLoanIdNotFound(){
-        UUID random=UUID.randomUUID();
+    void testLoanIdNotFound() {
+        UUID random = UUID.randomUUID();
         when(loanRepository.findByLoanIdAndIsActiveTrue(random)).thenReturn(Optional.empty());
 
-        ResourceNotFoundException exception=assertThrows(ResourceNotFoundException.class,()->service.approveLoan(random));
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> service.approveLoan(random));
 
 
-        assertEquals("Loan ID not found",exception.getMessage());
+        assertEquals("Loan ID not found", exception.getMessage());
         verify(loanRepository).findByLoanIdAndIsActiveTrue(random);
     }
 
 
     @Test
     @DisplayName("Should approve the loan")
-    void testApproveLoan(){
-        UUID id=UUID.randomUUID();
+    void testApproveLoan() {
+        UUID id = UUID.randomUUID();
 
-        Loan loan= new Loan();
+        Loan loan = new Loan();
         loan.setLoanStaus(LoanStatus.APPROVED);
-        LoanDto dto= new LoanDto();
+        LoanDto dto = new LoanDto();
 
         when(loanRepository.findByLoanIdAndIsActiveTrue(id)).thenReturn(Optional.of(loan));
         when(loanRepository.save(loan)).thenReturn(loan);
         when(loanMapper.toDto(loan)).thenReturn(dto);
 
-        LoanDto result=service.approveLoan(id);
+        LoanDto result = service.approveLoan(id);
 
-        assertEquals(LoanStatus.APPROVED,loan.getLoanStaus());
+        assertEquals(LoanStatus.APPROVED, loan.getLoanStaus());
         assertNotNull(result);
         verify(loanRepository).findByLoanIdAndIsActiveTrue(id);
 
@@ -116,34 +117,34 @@ public class AdminServiceTest {
 
     @Test
     @DisplayName("Throw exception when loan id is not found")
-    void testLoanIDNotFound(){
-        UUID random=UUID.randomUUID();
+    void testLoanIDNotFound() {
+        UUID random = UUID.randomUUID();
         when(loanRepository.findByLoanIdAndIsActiveTrue(random)).thenReturn(Optional.empty());
-        ResourceNotFoundException ex=assertThrows(ResourceNotFoundException.class,()->service.getLoanByLoanId(random));
+        ResourceNotFoundException ex = assertThrows(ResourceNotFoundException.class, () -> service.getLoanByLoanId(random));
 
-        assertEquals("Loan ID not found",ex.getMessage());
-        verify(loanMapper,never()).toDto(any());
+        assertEquals("Loan ID not found", ex.getMessage());
+        verify(loanMapper, never()).toDto(any());
     }
 
     @Test
     @DisplayName("should reject the loan")
-    void testRejectLoan(){
-        UUID id=UUID.randomUUID();
+    void testRejectLoan() {
+        UUID id = UUID.randomUUID();
 
-        Loan loan= new Loan();
+        Loan loan = new Loan();
         loan.setLoanStaus(LoanStatus.REJECTED);
 
-        LoanDto dto= new LoanDto();
+        LoanDto dto = new LoanDto();
 
         when(loanRepository.findByLoanIdAndIsActiveTrue(id)).thenReturn(Optional.of(loan));
         when(loanRepository.save(loan)).thenReturn(loan);
         when(loanMapper.toDto(loan)).thenReturn(dto);
 
-        LoanDto result=service.rejectLoan(id,"xyz");
+        LoanDto result = service.rejectLoan(id, "xyz");
 
-        assertNotNull( result);
-        assertEquals(LoanStatus.REJECTED,loan.getLoanStaus());
-        assertEquals("xyz",loan.getRejectionReason());
+        assertNotNull(result);
+        assertEquals(LoanStatus.REJECTED, loan.getLoanStaus());
+        assertEquals("xyz", loan.getRejectionReason());
 
         verify(loanRepository).findByLoanIdAndIsActiveTrue(id);
         verify(loanRepository).save(loan);
@@ -151,32 +152,32 @@ public class AdminServiceTest {
 
     @Test
     @DisplayName("Throw exception when loan id is not found")
-    void testLoanIDNotFoundWhileRejecting(){
-        UUID random=UUID.randomUUID();
-        String reason="xya";
+    void testLoanIDNotFoundWhileRejecting() {
+        UUID random = UUID.randomUUID();
+        String reason = "xya";
         when(loanRepository.findByLoanIdAndIsActiveTrue(random)).thenReturn(Optional.empty());
 
-        ResourceNotFoundException exception=assertThrows(ResourceNotFoundException.class,()->service.rejectLoan(random,reason));
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> service.rejectLoan(random, reason));
 
 
-        assertEquals("Loan ID not found",exception.getMessage());
+        assertEquals("Loan ID not found", exception.getMessage());
         verify(loanRepository).findByLoanIdAndIsActiveTrue(random);
     }
 
     @Test
     @DisplayName("Should get all users")
-    void testGetAllUsers(){
-        UUID random=UUID.randomUUID();
-        User user= new User();
-        UserDto dto= new UserDto();
+    void testGetAllUsers() {
+        UUID random = UUID.randomUUID();
+        User user = new User();
+        UserDto dto = new UserDto();
 
         when(userRepository.findAll()).thenReturn(List.of(user));
         when(userMapper.toDto(user)).thenReturn(dto);
 
-        List<UserDto> dtoList=service.getAllUsers();
+        List<UserDto> dtoList = service.getAllUsers();
 
         assertNotNull(dtoList);
-        assertEquals(1,dtoList.size());
+        assertEquals(1, dtoList.size());
         verify(userRepository).findAll();
 
     }

@@ -8,7 +8,7 @@ import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = { EducationMapper.class, CourseMapper.class, AddressMapper.class, PersonalDetailsMapper.class})
+@Mapper(componentModel = "spring", uses = {EducationMapper.class, CourseMapper.class, AddressMapper.class, PersonalDetailsMapper.class})
 public interface UserMapper {
 
 
@@ -22,7 +22,6 @@ public interface UserMapper {
     User toEntity(UserDto dto);
 
     List<UserDto> toDtoList(List<User> userList);
-
 
 
     @Mapping(target = "id", ignore = true)

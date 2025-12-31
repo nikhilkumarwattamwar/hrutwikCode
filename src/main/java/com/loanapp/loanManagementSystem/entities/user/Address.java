@@ -38,21 +38,21 @@ public class Address {
     private String pinCode;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "userId")
     private User user;
 
     @Enumerated(EnumType.STRING)
     private HouseOwnership houseOwnedBy;
 
-    @NotNull
+
     private Integer yearsAtCurrentResidence;
 
-    @Column(name = "isActive" ,nullable = false)
-    private boolean isActive=true;
+    @Column(name = "isActive")
+    private boolean isActive = true;
 
     @PrePersist
     public void onCreate() {
-        this.isActive=true;
+        this.isActive = true;
     }
 
 

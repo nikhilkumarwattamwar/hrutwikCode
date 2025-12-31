@@ -14,31 +14,31 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-   @Autowired
+    @Autowired
     AdminService service;
 
     @GetMapping("/loan")
-    public List<LoanDto> getAllLoans(){
+    public List<LoanDto> getAllLoans() {
         return service.getAllLoan();
     }
 
     @GetMapping("/loan/{loanId}")
-   public LoanDto getLoanByLoanId(@PathVariable UUID loanId){
+    public LoanDto getLoanByLoanId(@PathVariable UUID loanId) {
         return service.getLoanByLoanId(loanId);
     }
 
     @PutMapping("/loan/{loanId}/approve")
-   public LoanDto apprroveLoan(@PathVariable UUID loanId){
+    public LoanDto apprroveLoan(@PathVariable UUID loanId) {
         return service.approveLoan(loanId);
     }
 
     @PutMapping("/loan/{loanId}/reject")
-    public LoanDto rejectLoan(@PathVariable UUID loanId, @RequestParam String reason){
+    public LoanDto rejectLoan(@PathVariable UUID loanId, @RequestParam String reason) {
         return service.rejectLoan(loanId, reason);
     }
 
     @GetMapping("/user")
-    public  List<UserDto> getAllUsers(){
+    public List<UserDto> getAllUsers() {
         return service.getAllUsers();
     }
 

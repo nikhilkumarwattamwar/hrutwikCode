@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
@@ -46,29 +47,29 @@ public class EducationDetailsServiceTest {
 
 
     @BeforeEach
-    void setUp(){
-        user= new User();
-        id=UUID.randomUUID();
+    void setUp() {
+        user = new User();
+        id = UUID.randomUUID();
 
-        dto= new EducationDto();
-        dtoList=List.of(dto);
+        dto = new EducationDto();
+        dtoList = List.of(dto);
 
         entity = new EducationDetails();
-        entityList=List.of(entity);
+        entityList = List.of(entity);
     }
 
     @Test
     @DisplayName("saveEducationDetail : adding all education details for existing user id ")
-    void testSaveEducationDetail(){
+    void testSaveEducationDetail() {
         when(userRepository.findById(id)).thenReturn(Optional.ofNullable(user));
         when(mapper.toEntity(dto)).thenReturn(entity);
         when(educationRepository.saveAll(any())).thenReturn(entityList);
         when(mapper.toDtoList(entityList)).thenReturn(dtoList);
 
-        List<EducationDto> result=educationService.saveEducationDetail(dtoList,id);
+        List<EducationDto> result = educationService.saveEducationDetail(dtoList, id);
 
         assertNotNull(result);
-        assertEquals(dtoList,result);
+        assertEquals(dtoList, result);
 
         verify(userRepository).findById(id);
         verify(educationRepository).saveAll(any());
@@ -115,7 +116,7 @@ public class EducationDetailsServiceTest {
         dto.setExamPassed(ExamPassed.SSC);
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        when(educationRepository.findByUserIdAndExamPassed(id,ExamPassed.SSC)).thenReturn(Optional.of(entity));
+        when(educationRepository.findByUserIdAndExamPassed(id, ExamPassed.SSC)).thenReturn(Optional.of(entity));
 
         List<EducationDto> result = educationService.updateEducationDetail(dtoList, id);
 
@@ -128,63 +129,63 @@ public class EducationDetailsServiceTest {
 
     @Test
     @DisplayName("Should create new education details if it does not exist ")
-    void testCreateWhileUpdating(){
+    void testCreateWhileUpdating() {
 
-        UUID id=UUID.randomUUID();
-        User user1= new User();
+        UUID id = UUID.randomUUID();
+        User user1 = new User();
 
         when(userRepository.findById(id)).thenReturn(Optional.ofNullable(user1));
 
         user.setEducationDetailsList(new ArrayList<>());
 
-        EducationDto educationDto= new EducationDto();
+        EducationDto educationDto = new EducationDto();
         educationDto.setExamPassed(ExamPassed.SSC);
 
-        EducationDetails details= new EducationDetails();
+        EducationDetails details = new EducationDetails();
 
-        when(educationRepository.findByUserIdAndExamPassed(id,ExamPassed.SSC)).thenReturn(Optional.empty());
+        when(educationRepository.findByUserIdAndExamPassed(id, ExamPassed.SSC)).thenReturn(Optional.empty());
 
         when(mapper.toEntity(educationDto)).thenReturn(details);
 
         when(mapper.toDtoList(anyList())).thenReturn(List.of(educationDto));
 
-        List<EducationDto> result=educationService.updateEducationDetail(List.of(educationDto),id);
+        List<EducationDto> result = educationService.updateEducationDetail(List.of(educationDto), id);
 
         assertNotNull(result);
-        assertEquals(1,result.size());
+        assertEquals(1, result.size());
 
     }
 
     @Test
     @DisplayName("User id not found")
-    void testUserIdNotFound(){
-        UUID id= UUID.randomUUID();
+    void testUserIdNotFound() {
+        UUID id = UUID.randomUUID();
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
-        RuntimeException exception=assertThrows(RuntimeException.class,()->educationService.saveEducationDetail(dtoList,id));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> educationService.saveEducationDetail(dtoList, id));
 
-        assertEquals("User ID not found",exception.getMessage());
+        assertEquals("User ID not found", exception.getMessage());
     }
 
     @Test
     @DisplayName("User id not found while fetching education details")
-    void testGet_UserIdNotFound(){
+    void testGet_UserIdNotFound() {
         when(educationRepository.findAllByUserId(id)).thenReturn(Optional.empty());
 
-        RuntimeException exception=assertThrows(RuntimeException.class,()->educationService.getEducationDetailById(id));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> educationService.getEducationDetailById(id));
 
-        assertEquals("User ID not found",exception.getMessage());
+        assertEquals("User ID not found", exception.getMessage());
 
     }
 
     @Test
     @DisplayName("")
-    void testUpdate_UserIDNotFound(){
+    void testUpdate_UserIDNotFound() {
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
-        RuntimeException exception=assertThrows(RuntimeException.class,()->educationService.updateEducationDetail(dtoList,id));
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> educationService.updateEducationDetail(dtoList, id));
 
-        assertEquals("User ID not found",exception.getMessage());
+        assertEquals("User ID not found", exception.getMessage());
     }
 
 }

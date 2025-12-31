@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @DiscriminatorValue("PERSONAL")
-public class PersonalLoan extends Loan
-{
+public class PersonalLoan extends Loan {
     private String purpose;
     private Integer monthlyIncome;
     private Boolean salaried;

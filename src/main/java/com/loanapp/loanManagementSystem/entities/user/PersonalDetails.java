@@ -23,10 +23,10 @@ public class PersonalDetails {
     private Gender gender;
 
     @Enumerated(EnumType.STRING)
-     private MaritalStatus maritalStatus;
+    private MaritalStatus maritalStatus;
 
     @Column(name = "panNumber", nullable = false)
-   private String panCardNumber;
+    private String panCardNumber;
 
     @Column(name = "aadharNumber", nullable = false)
     private String aadharNumber;
@@ -41,13 +41,13 @@ public class PersonalDetails {
     private Disability disability;
 
     @Enumerated(EnumType.STRING)
-     private Constitution constitution;
+    private Constitution constitution;
 
     @Enumerated(EnumType.STRING)
     private Religion religion;
 
     @Enumerated(EnumType.STRING)
-     private Education education;
+    private Education education;
 
     @Enumerated(EnumType.STRING)
     private Category category;
@@ -56,12 +56,12 @@ public class PersonalDetails {
     @JoinColumn(name = "userId")
     private User user;
 
-    @Column(name = "isActive" ,nullable = false)
-    private boolean isActive=true;
+    @Column(name = "isActive", nullable = false)
+    private boolean isActive = true;
 
     @PrePersist
     public void onCreate() {
-        this.isActive=true;
+        this.isActive = true;
     }
 
 }
