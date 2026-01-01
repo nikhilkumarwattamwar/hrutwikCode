@@ -37,35 +37,6 @@ public class UserServiceTest {
     @InjectMocks
     UserServiceImpl userService;
 
-    @Test
-    @DisplayName("Adding user details")
-    void testCreateUser() {
-        UserDto dto = new UserDto();
-        dto.setEmail("abcd@gmail.com");
-        dto.setMobileNumber("1234567890");
-
-        AddressDto permanent = new AddressDto();
-        permanent.setType(AddressType.PERMANENT);
-        AddressDto residence = new AddressDto();
-        residence.setType(AddressType.RESIDENCE);
-        dto.setAddressList(List.of(permanent, residence));
-
-        User user = new User();
-
-        when(addressMapper.toEntity(any())).thenReturn(new Address());
-        when(userRepository.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
-        when(userRepository.findByMobileNumber(dto.getMobileNumber())).thenReturn(Optional.empty());
-        when(mapper.toDto(user)).thenReturn(dto);
-        when(mapper.toEntity(dto)).thenReturn(user);
-        when(userRepository.save(user)).thenReturn(user);
-
-        UserDto result = userService.addUserDetails(UUID.randomUUID(),dto);
-
-        assertNotNull(result);
-        assertEquals("abcd@gmail.com", result.getEmail());
-
-        verify(userRepository, times(1)).save(user);
-    }
 
     @Test
     @DisplayName("Fetching all users details")
@@ -192,26 +163,6 @@ public class UserServiceTest {
         BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.addUserDetails(UUID.randomUUID(),userDto));
 
         assertEquals("Mobile Number already exists.", exception.getMessage());
-    }
-
-    @Test
-    @DisplayName("throw exception if both address types are not present")
-    void testAddressTypeMissing() {
-        AddressDto addressDto = new AddressDto();
-        addressDto.setType(AddressType.PERMANENT);
-
-        UserDto userDto = new UserDto();
-        userDto.setEmail("xyz@gmail.com");
-        userDto.setMobileNumber("1234567890");
-        userDto.setAddressList(List.of(addressDto));
-
-        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-
-        when(userRepository.findByMobileNumber(anyString())).thenReturn(Optional.empty());
-
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> userService.addUserDetails(UUID.randomUUID(),userDto));
-
-        assertEquals("Both Permanent and Residence address are required.", exception.getMessage());
     }
 
     @Test

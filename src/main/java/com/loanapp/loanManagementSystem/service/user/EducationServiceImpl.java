@@ -19,8 +19,6 @@ import java.util.UUID;
 @Service
 public class EducationServiceImpl implements EducationService {
 
-    private static final Logger log = LoggerFactory.getLogger(EducationServiceImpl.class);
-
     @Autowired
     EducationRepository educationRepository;
 
@@ -33,10 +31,7 @@ public class EducationServiceImpl implements EducationService {
     @Override
     public List<EducationDto> saveEducationDetail(List<EducationDto> dto, UUID userId) {
 
-        log.info("Saving education details for userId: {}", userId);
-
         User user = userRepository.findById(userId).orElseThrow(() -> {
-            log.error("User not found with userId: {}", userId);
             return new RuntimeException("User ID not found");
         });
 
@@ -50,15 +45,12 @@ public class EducationServiceImpl implements EducationService {
 
         List<EducationDetails> savedList = educationRepository.saveAll(detailsList);
 
-        log.info("Education details saved successfully for user ID: {}", userId);
-
 
         return mapper.toDtoList(savedList);
     }
 
     @Override
     public List<EducationDto> getAllEducationDetail() {
-        log.info("Fetching all education details");
 
         List<EducationDetails> list = educationRepository.findAll();
 
@@ -68,10 +60,7 @@ public class EducationServiceImpl implements EducationService {
     @Override
     public List<EducationDto> getEducationDetailById(UUID userId) {
 
-        log.info("Fetching education details for userId: {}", userId);
-
         List<EducationDetails> details = educationRepository.findAllByUserId(userId).orElseThrow(() -> {
-            log.error("Education details not found for userId: {}", userId);
             return new RuntimeException("User ID not found");
         });
 
@@ -81,10 +70,7 @@ public class EducationServiceImpl implements EducationService {
     @Transactional
     public List<EducationDto> updateEducationDetail(List<EducationDto> dtoList, UUID userId) {
 
-        log.info("Updating education details for userId: {}", userId);
-
         User user = userRepository.findById(userId).orElseThrow(() -> {
-            log.error("User not found with userId: {}", userId);
             return new RuntimeException("User ID not found");
         });
 
@@ -102,9 +88,6 @@ public class EducationServiceImpl implements EducationService {
         }
 
         userRepository.save(user);
-
-        log.info("Education details updated successfully for userId: {}", userId);
-
 
         return mapper.toDtoList(user.getEducationDetailsList());
     }

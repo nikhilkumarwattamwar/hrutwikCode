@@ -15,41 +15,27 @@ import java.util.UUID;
 @RequestMapping("/user/course")
 public class CourseDetailController {
 
-    private static final Logger log = LoggerFactory.getLogger(CourseDetailController.class);
-
     @Autowired
     CourseService service;
 
     @PostMapping("/{userId}")
-    public CourseDto addCourseDetails(@RequestBody @Valid CourseDto dto, @PathVariable UUID userId) {
-
-        log.info("Adding course details for userId: {}", userId);
-
+    public CourseDto addCourseDetails(@RequestBody @Valid CourseDto dto,
+                                      @PathVariable UUID userId) {
         CourseDto savedDto = service.saveCourseDetails(userId, dto);
-
-        log.info("Course details added successfully for userId: {}", userId);
         return savedDto;
     }
 
 
     @GetMapping("/{userId}")
     public CourseDto getCourseDetailById(@PathVariable UUID userId) {
-
-        log.info("Fetching course details for userId: {}", userId);
-
         CourseDto courseDto = service.getCourseById(userId);
-
-        log.info("Course details fetched successfully for userId: {}", userId);
         return courseDto;
     }
 
     @PutMapping("/{userId}")
-    public CourseDto updateCourseDetail(@RequestBody @Valid CourseDto dto, @PathVariable UUID userId) {
-        log.info("Updating course details for userId: {}", userId);
-
+    public CourseDto updateCourseDetail(@RequestBody @Valid CourseDto dto,
+                                        @PathVariable UUID userId) {
         CourseDto updatedDto = service.updateCourseDetails(userId, dto);
-
-        log.info("Course details updated successfully for userId: {}", userId);
         return updatedDto;
     }
 

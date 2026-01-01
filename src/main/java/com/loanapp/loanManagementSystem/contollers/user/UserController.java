@@ -18,12 +18,10 @@ import java.util.UUID;
 @RequestMapping("/user")
 public class UserController {
 
-    private static final Logger log= LoggerFactory.getLogger(UserController.class);
-
     @Autowired
     UserService userService;
 
-    @PutMapping("/register")
+    @PostMapping("/register")
     public UserDto register(@RequestBody UserDto dto) {
         return userService.register(dto);
     }
@@ -38,34 +36,24 @@ public class UserController {
         return userService.addUserDetails(userId, dto);
     }
 
-//    @PostMapping
-//    public UserDto addUser(@RequestBody @Valid UserDto userDto){
-//        log.info("Adding user with email :{} "+userDto.getEmail());
-//        return userService.register(userDto);
-//    }
-
 
     @GetMapping("/all")
     public List<UserDto> getAllUserDetails(){
-        log.info("fetch all user");
         return userService.getAllUsers();
     }
 
     @GetMapping("/{userId}")
     public UserDto getUserDetailById(@PathVariable UUID userId){
-        log.info("Fetching user with id :{}"+userId);
         return userService.getUserById(userId);
     }
 
     @PutMapping("/{userId}")
     public UserDto updateUserdetail(@RequestBody @Valid UserDto dto, @PathVariable UUID userId){
-        log.info("Updating user with ID:{} ", userId);
         return userService.updateUser(dto,userId);
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<String> softDeleting(@PathVariable UUID userId){
-        log.warn("Soft deleting user with ID:{} ", userId);
         userService.softDeleteUser(userId);
         return ResponseEntity.ok("User deleted successfully");
     }

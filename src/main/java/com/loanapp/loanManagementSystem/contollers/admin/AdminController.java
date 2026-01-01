@@ -2,8 +2,6 @@ package com.loanapp.loanManagementSystem.contollers.admin;
 
 import com.loanapp.loanManagementSystem.dto.loan.LoanDto;
 import com.loanapp.loanManagementSystem.dto.user.UserDto;
-import com.loanapp.loanManagementSystem.entities.loan.Loan;
-import com.loanapp.loanManagementSystem.entities.user.User;
 import com.loanapp.loanManagementSystem.service.admin.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

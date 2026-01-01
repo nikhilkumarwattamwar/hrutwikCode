@@ -2,6 +2,7 @@ package com.loanapp.loanManagementSystem.integrate;
 
 import com.loanapp.loanManagementSystem.dto.loan.LoginRequestDto;
 import com.loanapp.loanManagementSystem.dto.loan.LoginResponseDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -11,16 +12,25 @@ public class FinClient {
 
     private final WebClient webClient;
 
+    @Value("${fin.service.base-url}")
+    private String baseUrl;
+
+    @Value("${fin.service.auth.register-endpoint}")
+    private String registerEndpoint;
+
+    @Value("${fin.service.auth.login-endpoint}")
+    private String loginEndpoint;
+
     public FinClient(WebClient.Builder builder) {
         this.webClient = builder
-                .baseUrl("http://ec2-34-200-233-130.compute-1.amazonaws.com:8081")
+                .baseUrl(baseUrl)
                 .build();
     }
 
     public Mono<String> register(AuthRequest request) {
         return webClient
                 .post()
-                .uri("/api/auth/register")
+                .uri(registerEndpoint)
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(String.class);
@@ -30,7 +40,7 @@ public class FinClient {
     public Mono<LoginResponseDto> login(LoginRequestDto request) {
         return webClient
                 .post()
-                .uri("/api/auth/login")
+                .uri(loginEndpoint)
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(LoginResponseDto.class);

@@ -16,8 +16,6 @@ import java.util.UUID;
 @Service
 public class PersonalDetailsServiceImpl implements PersonalDetailsService {
 
-    private static final Logger log = LoggerFactory.getLogger(PersonalDetailsServiceImpl.class);
-
     @Autowired
     PersonalDetailsRepository personalDetailsRepository;
 
@@ -29,11 +27,9 @@ public class PersonalDetailsServiceImpl implements PersonalDetailsService {
 
     public PersonalDto saveDetailsById(PersonalDto dto, UUID id) {
 
-        log.info("Saving personal details for user ID: {}", id);
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("User not found with ID: {}", id);
                     return new RuntimeException("ID does not exist");
                 });
         PersonalDetails details = mapper.toEntity(dto);
@@ -43,16 +39,13 @@ public class PersonalDetailsServiceImpl implements PersonalDetailsService {
 
         PersonalDetails saved = personalDetailsRepository.save(details);
 
-        log.info("Personal details saved successfully for user ID: {}", id);
         return mapper.toPersonaldto(saved);
 
     }
 
     public PersonalDto getDetailsByID(UUID id) {
-        log.info("Fetching personal details for user ID: {}", id);
 
         PersonalDetails details = personalDetailsRepository.findByUserId(id).orElseThrow(() -> {
-            log.error("Personal details not found for user ID: {}", id);
             return new RuntimeException("ID does not exists");
         });
 
@@ -61,19 +54,13 @@ public class PersonalDetailsServiceImpl implements PersonalDetailsService {
 
     public PersonalDto updateDetails(PersonalDto dto, UUID id) {
 
-        log.info("Updating personal details for user ID: {}", id);
-
         PersonalDetails existingDetails = personalDetailsRepository.findByUserId(id).orElseThrow(() -> {
-            log.error("Update failed. Personal details not found for user ID: {}", id);
             return new RuntimeException("User Id not found");
         });
 
         mapper.updateEntityFromDto(dto, existingDetails);
 
         PersonalDetails updated = personalDetailsRepository.save(existingDetails);
-
-        log.info("Personal details updated successfully for user ID: {}", id);
-
 
         return mapper.toPersonaldto(updated);
 

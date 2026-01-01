@@ -14,8 +14,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/loan/{loanId}/documets/")
 public class DocumentsController {
-
-    private static final Logger log = LoggerFactory.getLogger(DocumentsController.class);
     @Autowired
     DocumentsService service;
 
@@ -24,7 +22,6 @@ public class DocumentsController {
                                       @RequestParam MultipartFile file,
                                       @PathVariable UUID loanId) {
 
-        log.info("Uploading document for loanId {}", loanId);
         return service.uploadDocument(loanId, documentType, file);
     }
 

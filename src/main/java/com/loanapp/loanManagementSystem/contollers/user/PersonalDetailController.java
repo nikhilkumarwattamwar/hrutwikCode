@@ -14,27 +14,23 @@ import java.util.UUID;
 @RequestMapping("user/personal")
 public class PersonalDetailController {
 
-    private static final Logger log = LoggerFactory.getLogger(PersonalDetailController.class);
-
     @Autowired
     private PersonalDetailsService service;
 
     @PostMapping("/{id}")
-    public PersonalDto saveAllDetails(@RequestBody @Valid PersonalDto dto, @PathVariable UUID id) {
-        log.info("Saving personal details for id: {}", id);
+    public PersonalDto saveAllDetails(@RequestBody @Valid PersonalDto dto,
+                                      @PathVariable UUID id) {
         return service.saveDetailsById(dto, id);
     }
 
     @GetMapping("/{id}")
     public PersonalDto getDetails(@PathVariable UUID id) {
-        log.info("Fetching personal details for id: {}", id);
         return service.getDetailsByID(id);
     }
 
     @PutMapping("/{id}")
-    public PersonalDto updateDetails(@RequestBody @Valid PersonalDto dto, @PathVariable UUID id) {
-        log.info("Updating personal details for id: {}", id);
-
+    public PersonalDto updateDetails(@RequestBody @Valid PersonalDto dto,
+                                     @PathVariable UUID id) {
         return service.updateDetails(dto, id);
     }
 
