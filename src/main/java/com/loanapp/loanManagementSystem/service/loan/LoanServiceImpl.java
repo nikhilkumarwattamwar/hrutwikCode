@@ -7,15 +7,14 @@ import com.loanapp.loanManagementSystem.exception.ResourceNotFoundException;
 import com.loanapp.loanManagementSystem.mapper.loan.*;
 import com.loanapp.loanManagementSystem.repository.UserRepository;
 import com.loanapp.loanManagementSystem.repository.LoanRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@Slf4j
 public class LoanServiceImpl implements LoanService {
 
     @Autowired
@@ -39,6 +38,7 @@ public class LoanServiceImpl implements LoanService {
     @Autowired
     HomeLoanMapper homeLoanMapper;
 
+    @Transactional
     @Override
     public LoanDto createLoan(UUID userId, LoanDto loanDto) {
 
@@ -97,12 +97,14 @@ public class LoanServiceImpl implements LoanService {
     }
 
 
+    @Transactional(readOnly = true)
     @Override
     public LoanDto getLoanById(UUID loanId) {
         Loan loan = loanRepository.findById(loanId).orElseThrow(() -> new ResourceNotFoundException("Loan id not found"));
         return loanMapper.toDto(loan);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<LoanDto> getLoansByUserId(UUID userId) {
         List<Loan> loans = loanRepository.findByUserId(userId).orElseThrow(() -> {
@@ -114,6 +116,7 @@ public class LoanServiceImpl implements LoanService {
         return loanDtos;
     }
 
+    @Transactional
     @Override
     public void deleteLoan(UUID loanId) {
         Loan loan = loanRepository.findById(loanId).orElseThrow(() -> {
@@ -124,6 +127,7 @@ public class LoanServiceImpl implements LoanService {
         loanRepository.save(loan);
     }
 
+    @Transactional
     @Override
     public LoanDto updateLoan(UUID loanId, LoanDto loanDto) {
         Loan loan = loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(() -> {

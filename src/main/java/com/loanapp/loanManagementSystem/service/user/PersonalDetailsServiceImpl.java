@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -25,6 +26,7 @@ public class PersonalDetailsServiceImpl implements PersonalDetailsService {
     @Autowired
     UserRepository userRepository;
 
+    @Transactional
     public PersonalDto saveDetailsById(PersonalDto dto, UUID id) {
 
 
@@ -43,6 +45,7 @@ public class PersonalDetailsServiceImpl implements PersonalDetailsService {
 
     }
 
+    @Transactional(readOnly = true)
     public PersonalDto getDetailsByID(UUID id) {
 
         PersonalDetails details = personalDetailsRepository.findByUserId(id).orElseThrow(() -> {
@@ -52,6 +55,7 @@ public class PersonalDetailsServiceImpl implements PersonalDetailsService {
         return mapper.toPersonaldto(details);
     }
 
+    @Transactional
     public PersonalDto updateDetails(PersonalDto dto, UUID id) {
 
         PersonalDetails existingDetails = personalDetailsRepository.findByUserId(id).orElseThrow(() -> {
@@ -64,6 +68,15 @@ public class PersonalDetailsServiceImpl implements PersonalDetailsService {
 
         return mapper.toPersonaldto(updated);
 
+    }
+
+    @Transactional
+    public void deleteDetailsByUserId(UUID userId) {
+
+        PersonalDetails details = personalDetailsRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Personal details not found for user"));
+
+        personalDetailsRepository.delete(details);
     }
 
 

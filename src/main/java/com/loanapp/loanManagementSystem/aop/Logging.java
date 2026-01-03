@@ -13,12 +13,12 @@ public class Logging {
 
     public static final Logger log = LoggerFactory.getLogger(Logging.class);
 
-    @Pointcut("execution(*com.loanapp.loanManagementSystem.service..*.*(..))")
+    @Pointcut("execution(* com.loanapp.loanManagementSystem.service..*.*(..))")
     public void serviceLayer() {
 
     }
 
-    @Pointcut("execution(*com.loanapp.loanManagementSystem.controller..*.*(..))")
+    @Pointcut("execution(* com.loanapp.loanManagementSystem.controllers ..*.*(..))")
     public void controllerLayer() {
     }
 

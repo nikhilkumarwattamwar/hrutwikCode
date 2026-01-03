@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
+@PreAuthorize("hasRole('USER')")
 public class UserController {
 
     @Autowired
@@ -34,12 +36,6 @@ public class UserController {
     @PutMapping("/profile/{userId}")
     public UserDto addUserdetails(@PathVariable UUID userId, @RequestBody UserDto dto) {
         return userService.addUserDetails(userId, dto);
-    }
-
-
-    @GetMapping("/all")
-    public List<UserDto> getAllUserDetails(){
-        return userService.getAllUsers();
     }
 
     @GetMapping("/{userId}")

@@ -10,6 +10,7 @@ import com.loanapp.loanManagementSystem.repository.LoanRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
@@ -24,6 +25,7 @@ public class DocumentsServiceImpl implements DocumentsService {
     @Autowired
     private DocumentsRepository documentsRepository;
 
+    @Transactional
     @Override
     public DocumentsDto uploadDocument(UUID loanId, DocumentType documentType, MultipartFile file) {
         Loan loan = loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(() -> {
@@ -45,6 +47,7 @@ public class DocumentsServiceImpl implements DocumentsService {
         }
     }
 
+    @Transactional
     @Override
     public byte[] downloadDocument(Integer documentId) {
         Documents documents = documentsRepository.findById(documentId).orElseThrow(() -> new ResourceNotFoundException("documet not found"));
@@ -52,6 +55,7 @@ public class DocumentsServiceImpl implements DocumentsService {
         return documents.getData();
     }
 
+    @Transactional
     @Override
     public String softDeleteDocument(Integer documentId) {
         Documents documents = documentsRepository.findById(documentId).orElseThrow(() -> new ResourceNotFoundException("documet not found"));

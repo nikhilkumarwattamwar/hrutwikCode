@@ -11,20 +11,19 @@ import reactor.core.publisher.Mono;
 public class FinClient {
 
     private final WebClient webClient;
-
-    @Value("${fin.service.base-url}")
-    private String baseUrl;
-
-    @Value("${fin.service.auth.register-endpoint}")
     private String registerEndpoint;
-
-    @Value("${fin.service.auth.login-endpoint}")
     private String loginEndpoint;
 
-    public FinClient(WebClient.Builder builder) {
+    public FinClient(WebClient.Builder builder,
+                     @Value("${fin.service.base-url}")String baseUrl,
+                     @Value("${fin.service.auth.register-endpoint}")String registerEndpoint,
+                     @Value("${fin.service.auth.login-endpoint}")String loginEndpoint) {
+
         this.webClient = builder
                 .baseUrl(baseUrl)
                 .build();
+        this.loginEndpoint=loginEndpoint;
+        this.registerEndpoint=registerEndpoint;
     }
 
     public Mono<String> register(AuthRequest request) {

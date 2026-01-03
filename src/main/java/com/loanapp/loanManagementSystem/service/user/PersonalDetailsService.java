@@ -10,4 +10,6 @@ public interface PersonalDetailsService {
     public PersonalDto getDetailsByID(UUID id);
 
     PersonalDto updateDetails(PersonalDto dto, UUID id);
+
+    void deleteDetailsByUserId(UUID userId);
 }

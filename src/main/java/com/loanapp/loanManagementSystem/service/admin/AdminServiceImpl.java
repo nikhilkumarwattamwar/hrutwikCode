@@ -29,6 +29,7 @@ public class AdminServiceImpl implements AdminService {
 
     LoanMapper mapper;
 
+    @Transactional(readOnly = true)
     @Override
     public List<LoanDto> getAllLoan() {
         List<Loan> loans = loanRepository.findAll();
@@ -37,6 +38,7 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public LoanDto getLoanByLoanId(UUID loanId) {
         Loan loans = loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(() -> {
@@ -46,6 +48,7 @@ public class AdminServiceImpl implements AdminService {
         return mapper.toDto(loans);
     }
 
+    @Transactional
     @Override
     public LoanDto approveLoan(UUID loanId) {
         Loan existingLoan = loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(() -> {
@@ -58,6 +61,7 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
+    @Transactional
     @Override
     public LoanDto rejectLoan(UUID loanId, String reason) {
         Loan existingLoan = loanRepository.findByLoanIdAndIsActiveTrue(loanId).orElseThrow(() -> {
@@ -71,6 +75,7 @@ public class AdminServiceImpl implements AdminService {
         return mapper.toDto(updated);
     }
 
+    @Transactional
     @Override
     public List<UserDto> getAllUsers() {
         return userRepository.findAll().stream().map(user -> userMapper.toDto(user)).toList();

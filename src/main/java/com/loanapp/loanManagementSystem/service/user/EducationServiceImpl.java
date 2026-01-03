@@ -28,6 +28,7 @@ public class EducationServiceImpl implements EducationService {
     @Autowired
     EducationMapper mapper;
 
+    @Transactional
     @Override
     public List<EducationDto> saveEducationDetail(List<EducationDto> dto, UUID userId) {
 
@@ -49,6 +50,7 @@ public class EducationServiceImpl implements EducationService {
         return mapper.toDtoList(savedList);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<EducationDto> getAllEducationDetail() {
 
@@ -57,6 +59,7 @@ public class EducationServiceImpl implements EducationService {
         return list.stream().map(details -> mapper.toDto(details)).toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<EducationDto> getEducationDetailById(UUID userId) {
 
@@ -92,5 +95,14 @@ public class EducationServiceImpl implements EducationService {
         return mapper.toDtoList(user.getEducationDetailsList());
     }
 
+    @Transactional
+    @Override
+    public void deleteAllEducationByUserId(UUID userId) {
+
+        List<EducationDetails> list = educationRepository.findAllByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("No education records found"));
+
+        educationRepository.deleteAll(list);
+    }
 
 }

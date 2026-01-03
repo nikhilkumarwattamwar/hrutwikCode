@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +27,7 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     CourseMapper mapper;
 
+    @Transactional
     public CourseDto saveCourseDetails(UUID userId, CourseDto dto) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> {
@@ -44,6 +46,7 @@ public class CourseServiceImpl implements CourseService {
         return mapper.toDto(saved);
     }
 
+    @Transactional(readOnly = true)
     public CourseDto getCourseById(UUID userId) {
 
         CourseDetails details = courseRepository.findByUserId(userId).orElseThrow(() -> {
@@ -53,6 +56,7 @@ public class CourseServiceImpl implements CourseService {
         return mapper.toDto(details);
     }
 
+    @Transactional(readOnly = true)
     public List<CourseDto> getAllCourse() {
 
         List<CourseDetails> details = courseRepository.findAll();
@@ -60,6 +64,7 @@ public class CourseServiceImpl implements CourseService {
         return details.stream().map(mapper::toDto).toList();
     }
 
+    @Transactional
     public CourseDto updateCourseDetails(UUID userId, CourseDto dto) {
 
         CourseDetails existingDetails = courseRepository.findByUserId(userId).orElseThrow(() -> {
@@ -74,5 +79,14 @@ public class CourseServiceImpl implements CourseService {
 
     }
 
+    @Transactional
+    @Override
+    public void deleteCourseByUserId(UUID userId) {
+
+        CourseDetails details = courseRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Course details not found"));
+
+        courseRepository.delete(details);
+    }
 
 }

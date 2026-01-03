@@ -14,9 +14,6 @@ import com.loanapp.loanManagementSystem.mapper.user.AddressMapper;
 import com.loanapp.loanManagementSystem.mapper.user.UserMapper;
 import com.loanapp.loanManagementSystem.entities.user.User;
 import com.loanapp.loanManagementSystem.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,40 +23,44 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 
-
-    @Autowired
     UserRepository userRepository;
-
-    @Autowired
     UserMapper mapper;
-
-    @Autowired
     AddressMapper addressMapper;
-
-    @Autowired
     FinClient finClient;
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper mapper, AddressMapper addressMapper, FinClient finClient) {
+        this.userRepository = userRepository;
+        this.mapper = mapper;
+        this.addressMapper = addressMapper;
+        this.finClient = finClient;
+    }
 
     @Transactional
     @Override
     public UserDto register(UserDto dto) {
-
         FinClient.AuthRequest request = new FinClient.AuthRequest();
         request.setName(dto.getName());
         request.setEmail(dto.getEmail());
         request.setPassword(dto.getPassword());
         request.setRole(dto.getRole().name());
 
-        finClient.register(request).block();
+        try {
+            finClient.register(request)
+                    .onErrorMap(ex -> new RuntimeException("Auth service unavailable"))
+                    .block();
+        } catch (Exception e) {
+            throw new RuntimeException("User registration failed in auth service");
+        }
 
         User user = new User();
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         user.setActive(true);
 
-        User saved = userRepository.save(user);
-        return mapper.toDto(saved);
+        return mapper.toDto(userRepository.save(user));
     }
 
+    @Transactional
     @Override
     public LoginResponseDto login(LoginRequestDto dto) {
 
@@ -67,16 +68,19 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException("Email and password are required");
         }
 
-        LoginResponseDto response = finClient.login(dto).block();
+        LoginResponseDto response = finClient.login(dto)
+                .onErrorMap(ex -> new RuntimeException("Auth service unavailable"))
+                .block();
 
         if (response == null || response.getToken() == null) {
-            throw new RuntimeException("Invalid credentials");
+            throw new BadRequestException("Invalid credentials");
         }
 
         return response;
     }
 
 
+    @Transactional
     public UserDto addUserDetails(UUID userId, UserDto dto) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             return new ResourceNotFoundException("User id not found");
@@ -111,7 +115,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
+    @Transactional(readOnly = true)
     @Override
     public List<UserDto> getAllUsers() {
 
@@ -120,6 +124,7 @@ public class UserServiceImpl implements UserService {
         return mapper.toDtoList(applicantsList);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public UserDto getUserById(UUID userId) {
 
@@ -130,6 +135,7 @@ public class UserServiceImpl implements UserService {
         return mapper.toDto(user);
     }
 
+    @Transactional
     @Override
     public UserDto updateUser(UserDto dto, UUID id) {
 
@@ -157,6 +163,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Transactional
     @Override
     public void softDeleteUser(UUID userId) {
 

@@ -14,4 +14,6 @@ public interface EducationService {
     List<EducationDto> getEducationDetailById(UUID userID);
 
     List<EducationDto> updateEducationDetail(List<EducationDto> dto, UUID userId);
+
+    void deleteAllEducationByUserId(UUID userId);
 }

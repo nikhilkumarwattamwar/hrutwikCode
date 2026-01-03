@@ -6,6 +6,7 @@ import com.loanapp.loanManagementSystem.service.loan.DocumentsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,6 +18,7 @@ public class DocumentsController {
     @Autowired
     DocumentsService service;
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/upload")
     public DocumentsDto uploadDocumet(@RequestParam DocumentType documentType,
                                       @RequestParam MultipartFile file,
@@ -25,11 +27,14 @@ public class DocumentsController {
         return service.uploadDocument(loanId, documentType, file);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/{documentId}")
     public byte[] downloadDocument(@PathVariable Integer documentId) {
         return service.downloadDocument(documentId);
     }
 
+
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{documentId}")
     public void softDelete(@PathVariable Integer documentId) {
         service.softDeleteDocument(documentId);
