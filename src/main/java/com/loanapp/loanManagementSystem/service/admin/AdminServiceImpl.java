@@ -25,8 +25,10 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
     UserMapper userMapper;
 
+    @Autowired
     LoanMapper mapper;
 
     @Transactional(readOnly = true)
