@@ -17,38 +17,42 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
-@PreAuthorize("hasRole('USER')")
 public class UserController {
 
     @Autowired
     UserService userService;
 
+    @PreAuthorize("permitAll()")
     @PostMapping("/register")
     public UserDto register(@RequestBody UserDto dto) {
         return userService.register(dto);
     }
 
+    @PreAuthorize("permitAll()")
     @PostMapping("/login")
     public LoginResponseDto login(@RequestBody LoginRequestDto dto) {
         return userService.login(dto);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/profile/{userId}")
     public UserDto addUserdetails(@PathVariable UUID userId, @RequestBody UserDto dto) {
         return userService.addUserDetails(userId, dto);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/{userId}")
     public UserDto getUserDetailById(@PathVariable UUID userId){
         return userService.getUserById(userId);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/{userId}")
     public UserDto updateUserdetail(@RequestBody @Valid UserDto dto, @PathVariable UUID userId){
         return userService.updateUser(dto,userId);
     }
 
-    @DeleteMapping("/{userId}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<String> softDeleting(@PathVariable UUID userId){
         userService.softDeleteUser(userId);
         return ResponseEntity.ok("User deleted successfully");
