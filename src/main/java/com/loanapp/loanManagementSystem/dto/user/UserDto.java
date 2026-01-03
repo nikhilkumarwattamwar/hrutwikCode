@@ -1,6 +1,8 @@
 package com.loanapp.loanManagementSystem.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.loanapp.loanManagementSystem.enums.CustomerFetchType;
 import com.loanapp.loanManagementSystem.enums.CustomerType;
 import com.loanapp.loanManagementSystem.enums.Role;
@@ -59,8 +61,9 @@ public class UserDto {
     @Valid
     private List<AddressDto> addressList = new ArrayList<>();
 
+    @JsonIgnore
     private Role role;
 
-    @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 }
