@@ -1,12 +1,14 @@
 package com.loanapp.loanManagementSystem.entities.loan.homeLoan;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "home_loan_applicant")
+@Data
 public class HomeLoanApplicant {
 
     @Id

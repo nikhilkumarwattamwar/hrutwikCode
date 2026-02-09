@@ -7,43 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
-//
-//@Service
-//public class S3Service {
-//
-//    @Autowired
-//    private S3Client s3Client;
-//
-//    @Value("${aws.s3.bucket}")
-//    private String bucketName;
-//
-//    public String uploadFile(MultipartFile file) throws IOException {
-//
-//        PutObjectRequest request = PutObjectRequest.builder()
-//                .bucket(bucketName)
-//                .key(file.getOriginalFilename())
-//                .contentType(file.getContentType())
-//                .build();
-//
-//        s3Client.putObject(
-//                request,
-//                RequestBody.fromBytes(file.getBytes())
-//        );
-//
-//        return "File uploaded successfully";
-//    }
-//
-//}
-
-
-
-
 @Service
 public class S3Service {
 
@@ -61,11 +27,30 @@ public class S3Service {
         System.out.println("S3Service loaded, bucket = " + bucketName);
     }
 
-    public String uploadFile(MultipartFile file) throws IOException {
+//    public String uploadFile(MultipartFile file) throws IOException {
+//
+//        PutObjectRequest request = PutObjectRequest.builder()
+//                .bucket(bucketName)
+//                .key("loanphotos/"+  file.getOriginalFilename())
+//                .contentType(file.getContentType())
+//                .build();
+//
+//        s3Client.putObject(
+//                request,
+//                RequestBody.fromBytes(file.getBytes())
+//        );
+//
+//        return "File uploaded successfully";
+//    }
+
+
+    public String uploadFile(MultipartFile file, Long homeLoanId, String documentType) throws IOException {
+
+        String fileKey = "loanphotos/" + homeLoanId + "/" + documentType + "_" + file.getOriginalFilename();
 
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucketName)
-                .key("loanphotos/"+  file.getOriginalFilename())
+                .key(fileKey)
                 .contentType(file.getContentType())
                 .build();
 
@@ -74,25 +59,71 @@ public class S3Service {
                 RequestBody.fromBytes(file.getBytes())
         );
 
-        return "File uploaded successfully";
+        return fileKey;
     }
 
 
-    /* ================= DOWNLOAD ================= */
-    public byte[] downloadFile(String fileName) {
 
-        GetObjectRequest request = GetObjectRequest.builder()
-                .bucket(bucketName)
-                .key("loanphotos/"+  fileName)
-                .build();
 
-        ResponseBytes<GetObjectResponse> objectBytes =
-                s3Client.getObjectAsBytes(request);
+//    public byte[] downloadFile(String fileName) {
+//
+//        GetObjectRequest request = GetObjectRequest.builder()
+//                .bucket(bucketName)
+//                .key("loanphotos/"+  fileName)
+//                .build();
+//
+//        ResponseBytes<GetObjectResponse> objectBytes =
+//                s3Client.getObjectAsBytes(request);
+//
+//        return objectBytes.asByteArray();
+//    }
 
-        return objectBytes.asByteArray();
+//    public byte[] downloadFileByPath(String filePath) {
+//
+//        GetObjectRequest request = GetObjectRequest.builder()
+//                .bucket(bucketName)
+//                .key(filePath)
+//                .build();
+//
+//        ResponseBytes<GetObjectResponse> objectBytes =
+//                s3Client.getObjectAsBytes(request);
+//
+//        return objectBytes.asByteArray();
+//    }
+
+
+    public byte[] downloadFileByPath(String filePath) {
+
+        if (filePath == null || filePath.isBlank()) {
+            throw new IllegalArgumentException("File path is empty");
+        }
+
+        // ✅ Allow only Aadhaar photos
+//        if (!filePath.contains("/AADHAAR")) {
+//            throw new RuntimeException("Access denied: Only AADHAAR documents are allowed");
+//        }
+
+        try {
+            GetObjectRequest request = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(filePath)
+                    .build();
+
+            ResponseBytes<GetObjectResponse> objectBytes =
+                    s3Client.getObjectAsBytes(request);
+
+            return objectBytes.asByteArray();
+
+        } catch (NoSuchKeyException e) {
+            throw new RuntimeException("File not found in S3", e);
+
+        } catch (S3Exception e) {
+            throw new RuntimeException("Error downloading file from S3", e);
+        }
     }
 
-    /* ================= UPDATE ================= */
+
+
     public String updateFile(String fileName, MultipartFile file) throws IOException {
 
         PutObjectRequest request = PutObjectRequest.builder()
@@ -109,7 +140,6 @@ public class S3Service {
         return "File updated successfully";
     }
 
-    /* ================= DELETE ================= */
     public String deleteFile(String fileName) {
 
         DeleteObjectRequest request = DeleteObjectRequest.builder()

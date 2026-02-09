@@ -26,8 +26,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/s3/**").permitAll()
-                            .requestMatchers("/admin/**").hasRole("ADMIN")
-                   .requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
+//                            .requestMatchers("/admin/**").hasRole("ADMIN")
+//                   .requestMatchers("/user/**").hasAnyRole("USER","ADMIN")
                     .anyRequest().authenticated()
                 )
                 .addFilterBefore(

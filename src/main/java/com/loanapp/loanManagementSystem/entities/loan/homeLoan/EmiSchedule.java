@@ -1,13 +1,14 @@
 package com.loanapp.loanManagementSystem.entities.loan.homeLoan;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "emi_schedule")
+@Data
 public class EmiSchedule {
 
     @Id
@@ -25,9 +26,7 @@ public class EmiSchedule {
 
     private LocalDateTime createdAt;
 
-
     @ManyToOne
     @JoinColumn(name = "home_loan_id")
     private HomeLoanData homeLoan;
 }
-

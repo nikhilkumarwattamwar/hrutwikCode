@@ -1,6 +1,8 @@
 package com.loanapp.loanManagementSystem.entities.loan.homeLoan;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -8,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "home_loan_data")
+@Data
 public class HomeLoanData {
 
     @Id
@@ -36,9 +39,11 @@ public class HomeLoanData {
     private List<EmiSchedule> emis;
 
     @OneToMany(mappedBy = "homeLoan", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<HomeLoanDocument> documents;
 
     @OneToOne(mappedBy = "homeLoan", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private PropertyDetails propertyDetails;
 
     @OneToOne(mappedBy = "homeLoan", cascade = CascadeType.ALL)
